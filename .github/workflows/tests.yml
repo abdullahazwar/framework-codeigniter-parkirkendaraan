@@ -26,12 +26,6 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=10
-    env:
-      database.tests.hostname: 127.0.0.1
-      database.tests.database: parkir_test
-      database.tests.username: root
-      database.tests.password: ci-test-only
-      database.tests.port: 3306
     steps:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
@@ -39,6 +33,15 @@ jobs:
           php-version: "8.3"
           extensions: intl, mbstring, mysqli, dom, xml, xmlwriter
           coverage: none
+      - name: Configure test database
+        run: |
+          cat > .env <<'ENV'
+          database.tests.hostname = 127.0.0.1
+          database.tests.database = parkir_test
+          database.tests.username = root
+          database.tests.password = ci-test-only
+          database.tests.port = 3306
+          ENV
       - run: composer install --no-interaction --prefer-dist
       - run: composer validate --strict
       - run: composer lint
