@@ -14,7 +14,8 @@
         <p class="eyebrow">STATUS <?= (int) $errorCode ?></p>
         <h1><?= esc($errorTitle) ?></h1>
         <p class="text-muted"><?= esc($errorMessage) ?></p>
-        <a class="btn btn-primary" href="<?= esc(rtrim(config('App')->baseURL, '/')) ?>/dashboard">Kembali ke dashboard</a>
+        <?php $backPath = session('user.role') === 'pengguna' ? 'akun' : 'dashboard'; ?>
+        <a class="btn btn-primary" href="<?= esc(rtrim(config('App')->baseURL, '/')) ?>/<?= $backPath ?>">Kembali ke <?= $backPath === 'akun' ? 'akun' : 'dashboard' ?></a>
     </main>
 </body>
 </html>

@@ -96,8 +96,12 @@ jobs:
           trap 'kill "$server_pid" 2>/dev/null || true' EXIT
           curl --fail --silent --show-error --retry 10 --retry-connrefused --retry-delay 1 \
             http://127.0.0.1:8080/login --output "$RUNNER_TEMP/login.html"
-          php -r 'if (!str_contains(file_get_contents($argv[1]), "Masuk ke panel")) { exit(1); }' "$RUNNER_TEMP/login.html"
-          for asset in assets/vendor/bootstrap/bootstrap.min.css assets/vendor/bootstrap/bootstrap.bundle.min.js assets/css/style.css assets/js/parkir.js; do
+          php -r 'if (!str_contains(file_get_contents($argv[1]), "Masuk ke Parkir")) { exit(1); }' "$RUNNER_TEMP/login.html"
+          for asset in \
+            assets/vendor/bootstrap/bootstrap.min.css \
+            assets/vendor/bootstrap/bootstrap.bundle.min.js \
+            assets/css/style.css assets/css/public.css \
+            assets/js/parkir.js assets/js/public.js; do
             curl --fail --silent --show-error "http://127.0.0.1:8080/$asset" --output /dev/null
           done
       - name: Show runtime logs on failure

@@ -105,9 +105,18 @@ Motor memakai tarif yang sama tiap jam. Mobil memakai tarif pertama dan lanjutan
 
 - Auto-routing dimatikan. Semua mutation memakai POST dan CSRF berbasis session.
 - `AuthFilter` memeriksa akun aktif dan versi sesi ke database pada setiap request.
+- `StaffFilter` membatasi dashboard, kendaraan, tiket, riwayat, dan pembayaran
+  untuk peran `admin` atau `petugas`.
 - `AdminFilter` melindungi seluruh route `/admin`, termasuk CSV dan mutation.
+- Profil web (`/` dan `/profil`), login, serta pendaftaran tersedia bagi tamu.
+  Pendaftaran selalu menyimpan peran `pengguna`, mengabaikan parameter peran dari
+  request. Sesudah login, pengguna menuju `/akun`; admin/petugas menuju dashboard.
+- `/akun` menampilkan identitas akun sendiri dan tarif terkini dari tabel `tarif`.
+  Route ini tidak menampilkan daftar kendaraan atau transaksi milik pengelola.
 - Password memakai `password_hash` dan `password_verify`.
 - Login dibatasi per IP dan per username menggunakan throttler dan cache file CI4.
+- Pendaftaran dibatasi per IP, memakai CSRF, username unik, konfirmasi password,
+  serta batas panjang password. Nama dan username saja disimpan sebagai old input.
 - Session ID dirotasi saat login. Logout menghapus session.
 - Pengeditan petugas menaikkan `auth_version` dan membatalkan sesi lama.
 - Password tidak disimpan sebagai old input ketika formulir gagal.

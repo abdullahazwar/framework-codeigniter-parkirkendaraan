@@ -4,6 +4,7 @@ namespace Config;
 
 use App\Filters\AdminFilter;
 use App\Filters\AuthFilter;
+use App\Filters\StaffFilter;
 use CodeIgniter\Config\Filters as BaseFilters;
 use CodeIgniter\Filters\CSRF;
 use CodeIgniter\Filters\ForceHTTPS;
@@ -18,6 +19,7 @@ class Filters extends BaseFilters
         'invalidchars' => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
         'auth' => AuthFilter::class,
+        'staff' => StaffFilter::class,
         'admin' => AdminFilter::class,
     ];
     public array $required = ['before' => ['forcehttps'], 'after' => []];

@@ -93,3 +93,37 @@ Fungsi proc_open harus tersedia untuk menjalankan worker konkurensi.
 Workflow `.github/workflows/tests.yml` menyiapkan PHP 8.2 dengan MySQL 8.0,
 MariaDB 10.11, dan MariaDB 10.4 untuk memeriksa kompatibilitas XAMPP.
 Status workflow di GitHub harus dilihat terpisah dari hasil MariaDB lokal.
+
+## Profil publik dan pendaftaran pengguna
+
+Pembaruan 19 Oktober 2026 diperiksa dengan PHP 8.3.6, MariaDB 10.11.14,
+PHPUnit 10.5.66, dan Chromium headless 133. Dependensi untuk pengujian ditempatkan
+terpisah dari bundle runtime aplikasi.
+
+- Seluruh suite lulus: 43 tes, 182 assertion. Termasuk 12 tes baru untuk halaman
+  publik, pendaftaran, validasi, CSRF, throttling, login, akun nonaktif, dan izin.
+- Pendaftaran mengabaikan input `role`, `aktif`, dan `auth_version` dari browser.
+  Akun baru tetap menjadi pengguna aktif biasa.
+- Username duplikat tidak menimpa akun. Konfirmasi yang salah dan password terlalu
+  panjang ditolak. Session old input hanya menyimpan nama dan username.
+- Pengguna mendapat HTTP 403 pada seluruh route baca/tulis operasional dan admin
+  yang diuji, termasuk tiket dan CSV. Akun hanya memuat identitas sendiri dan tarif.
+- Browser memeriksa profil, login, dan daftar pada lebar 320, 390, 768, serta
+  1440 piksel. Tidak ditemukan overflow horizontal pada halaman tersebut.
+- Alur browser mencakup validasi konfirmasi, daftar berhasil, login pengguna,
+  pembacaan tarif, akses ditolak, logout, login admin, dan halaman pengaturan.
+- Alur yang sama lulus pada URL biasa dan simulasi subfolder
+  `/gittugas/parkir/framework-codeigniter-parkirkendaraan/public/` memakai server
+  PHP lokal. Pemeriksaan ini tidak menjalankan Apache Windows secara langsung.
+- Menu HP, Escape, pengembalian fokus, tautan bagian halaman, dan FAQ bekerja.
+  Navigasi juga tersedia ketika JavaScript dimatikan. Tidak ada error JavaScript
+  selama alur yang diperiksa.
+- Dump SQL dengan skema peran lama diimpor ke database pengujian terpisah.
+  Migration menambah peran pengguna. Sidik seluruh baris dalam enam tabel aplikasi
+  tetap sama setelah pembaruan.
+- Pemeriksaan sintaks 117 berkas PHP dan pemeriksaan runtime tanpa Composer lulus.
+  `composer validate --strict` lulus. Seluruh `.htaccess`, contoh `.env`, serta
+  bundle `vendor` aplikasi tetap sama. Tidak ada `.env` baru yang dibuat.
+
+Screenshot yang ditinjau tersedia pada `screenshots/profil-desktop.png` dan
+`screenshots/daftar-mobile.png`. Tampilan HP diperiksa melalui simulasi viewport.

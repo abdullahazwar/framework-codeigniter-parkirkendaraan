@@ -12,7 +12,7 @@ abstract class BaseController extends Controller
     protected function gagal(string $pesan): RedirectResponse
     {
         $input = $this->request->getPost();
-        unset($input['password'], $input['password_baru']);
+        unset($input['password'], $input['password_baru'], $input['password_confirmation']);
         session()->setFlashdata('_ci_old_input', ['get' => [], 'post' => $input]);
 
         return redirect()->back()->with('error', $pesan);

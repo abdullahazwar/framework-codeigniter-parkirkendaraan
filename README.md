@@ -16,7 +16,10 @@ dijalankan tanpa memasang atau menjalankan Composer.
 
 ## Fitur
 
-- Login admin dan petugas dengan pembatasan akses.
+- Halaman profil publik dengan navigasi Tentang, Keunggulan, Alur parkir, dan FAQ.
+- Tombol Masuk serta Daftar di navigasi atas, termasuk tampilan HP.
+- Pendaftaran pengguna, profil akun, dan informasi tarif langsung dari database.
+- Login pengguna, admin, dan petugas dengan pembatasan akses sesuai peran.
 - Kendaraan masuk, alokasi slot otomatis, dan tiket yang dapat dicetak.
 - Cari tiket aktif melalui kode atau plat, dilengkapi filter dan pagination.
 - Tarif motor per jam dan mobil bertingkat. Minimal satu jam, pembulatan ke atas.
@@ -102,6 +105,32 @@ PHPUnit. Pengguna XAMPP dapat langsung memakai hasil clone atau Download ZIP.
    Buka `http://localhost:8080`, lalu login dengan akun yang disiapkan pada langkah 5.
 
 ## Cara menggunakan
+
+Halaman awal menampilkan profil web. Pengunjung dapat membaca informasi tanpa
+login, membuka **Daftar**, lalu masuk untuk melihat **Akun saya** dan tarif saat ini.
+Akun hasil pendaftaran selalu berperan `pengguna`. Panel operasional tetap hanya
+untuk admin dan petugas. Akun pengguna tidak menyediakan reservasi slot.
+
+### Pembaruan instalasi yang sudah berjalan
+
+Setelah mengambil source terbaru, jalankan satu kali dari folder proyek:
+
+```bash
+php spark migrate
+```
+
+Pada XAMPP Windows jika PHP belum ada di PATH:
+
+```bat
+C:\xampp\php\php.exe spark migrate
+```
+
+Migration menambah peran `pengguna` tanpa menghapus akun atau transaksi lama.
+Tidak perlu mengimpor ulang SQL, menjalankan seed, atau memasang Composer.
+Pertahankan `.env` dan seluruh `.htaccess` yang sudah sesuai localhost.
+SQL untuk instalasi baru juga sudah memuat peran pengguna.
+
+### Operasional admin dan petugas
 
 1. Admin membuka Akun petugas untuk menambahkan akun operasional.
 2. Buka Kendaraan masuk, isi plat dan jenis, lalu simpan tiket.

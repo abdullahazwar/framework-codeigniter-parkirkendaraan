@@ -178,7 +178,7 @@ CREATE TABLE `users` (
   `nama` varchar(100) NOT NULL,
   `username` varchar(50) NOT NULL,
   `password_hash` varchar(255) NOT NULL,
-  `role` enum('admin','petugas') NOT NULL DEFAULT 'petugas',
+  `role` enum('admin','petugas','pengguna') NOT NULL DEFAULT 'petugas',
   `aktif` tinyint(1) NOT NULL DEFAULT 1,
   `auth_version` int(10) UNSIGNED NOT NULL DEFAULT 1,
   `created_at` datetime NOT NULL,

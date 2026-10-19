@@ -1,6 +1,6 @@
 # Catatan desain
 
-Produk: panel operasional parkir untuk admin dan petugas di satu lokasi.
+Produk: profil web publik, akun pengguna, dan panel operasional parkir di satu lokasi.
 Tugas utama: mencatat kendaraan masuk, menemukan tiket aktif, menerima pembayaran.
 Target: HP untuk operasional dan desktop untuk pengelolaan serta laporan.
 
@@ -10,8 +10,16 @@ kendaraan. Tabel dapat digulir tanpa membuat seluruh halaman melebar.
 
 - Font sistem agar tidak memerlukan layanan font eksternal.
 - Bootstrap 5.3.8 lokal sebagai dasar komponen dan navigasi HP.
-- Semua gaya aplikasi berada di `public/assets/css/style.css`.
-- Semua interaksi aplikasi berada di `public/assets/js/parkir.js`.
+- Gaya panel dan token bersama berada di `public/assets/css/style.css`.
+- Gaya halaman publik berada di `public/assets/css/public.css`, dibatasi oleh
+  kelas `.public-page` agar tidak mengubah panel operasional.
+- Interaksi form, pembayaran, dan cetak berada di `public/assets/js/parkir.js`.
+- Navigasi publik berada di `public/assets/js/public.js`. Menu HP dapat ditutup
+  dengan Escape, klik tautan, klik di luar header, atau perpindahan fokus.
+- Header publik menampilkan Masuk dan Daftar, beserta Tentang, Keunggulan,
+  Alur parkir, dan FAQ. Tanpa JavaScript, seluruh tautan tetap tersedia.
+- Ilustrasi area parkir memakai HTML/CSS dan diberi keterangan sebagai ilustrasi,
+  bukan indikator slot aktual. FAQ memakai elemen native `details` dan `summary`.
 - Fokus keyboard, label form, skip link, nama region tabel, dan reduced motion.
 - State kosong, pencarian tanpa hasil, validasi, akses ditolak, dan sukses.
 - Pembayaran menampilkan uang diterima dan estimasi kembalian sebelum konfirmasi.
@@ -22,6 +30,8 @@ fiktif untuk demonstrasi. Screenshot ini bukan data transaksi produksi.
 
 | Tampilan | Berkas |
 | --- | --- |
+| Profil web desktop | [profil-desktop.png](screenshots/profil-desktop.png) |
+| Pendaftaran di HP | [daftar-mobile.png](screenshots/daftar-mobile.png) |
 | Dashboard desktop | [dashboard-desktop.png](screenshots/dashboard-desktop.png) |
 | Kendaraan masuk di HP | [masuk-mobile.png](screenshots/masuk-mobile.png) |
 | Tiket masuk | [tiket-masuk.png](screenshots/tiket-masuk.png) |

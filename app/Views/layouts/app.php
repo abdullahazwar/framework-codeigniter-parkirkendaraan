@@ -63,6 +63,11 @@
                 <?php endforeach; ?>
             </nav>
             <?php endif; ?>
+            <p class="nav-label">INFORMASI</p>
+            <nav aria-label="Informasi web">
+                <a class="nav-item" href="<?= url_to('profil') ?>">Profil web Parkir</a>
+                <a class="nav-item" href="<?= url_to('akun') ?>">Akun saya</a>
+            </nav>
             <div class="sidebar-account">
                 <span class="account-avatar"
                     aria-hidden="true"><?= esc(mb_substr(session("user.nama") ?? "", 0, 1)) ?></span>
