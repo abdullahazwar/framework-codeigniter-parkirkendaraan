@@ -89,13 +89,19 @@ http://localhost/gittugas/parkir/framework-codeigniter-parkirkendaraan/public/
    Setelah seed berhasil, hapus nilai `parkir.adminPassword` dari `.env`. Login
    memakai username dan password yang diisi sendiri sebelum proses seed.
 
+   Alternatif melalui phpMyAdmin: pilih database lalu impor
+   `app/Database/parkir.sql`. Pada database kosong, file ini menyiapkan seluruh
+   tabel, slot, tarif, dan data admin dari dump awal proyek. Tidak perlu menjalankan
+   migration atau seed setelah impor. Jalur migration dan seed di atas tersedia
+   untuk instalasi kosong dengan password admin yang ditentukan sendiri.
+
 7. Buka URL aplikasi di atas, lalu tekan Ctrl+F5 untuk memuat ulang aset.
 
 ## Mengaktifkan halaman pengguna pada database lama
 
 1. Ambil source terbaru dari branch `main`.
 2. Buka phpMyAdmin dan pilih database yang sedang dipakai aplikasi.
-3. Pilih **Import**, lalu impor `app/Database/fitur_pengguna_parkir.sql`.
+3. Pilih **Import**, lalu impor `app/Database/parkir.sql`.
 4. Muat ulang aplikasi. Login pengguna menuju `/pengguna`; login admin/petugas
    menuju `/dashboard`.
 
@@ -103,13 +109,13 @@ Skema lama hanya menerima peran `admin` dan `petugas`. Akun yang didaftarkan
 melalui web memakai peran `pengguna`, sehingga database lama menolak penyimpanan.
 SQL pembaruan memperbarui kolom peran dan menambah dua tabel untuk kendaraan
 tersimpan serta permintaan parkir. SQL ini boleh diimpor ulang dan tidak
-membutuhkan Composer atau perintah terminal. Jika sebelumnya sudah mengimpor
-`perbaikan_daftar_user.sql`, impor file fitur di atas juga untuk mengaktifkan
-halaman pengguna yang lengkap.
+membutuhkan Composer atau perintah terminal. Seluruh fitur admin, petugas, dan
+pengguna sekarang berada dalam satu file `parkir.sql` dan satu database.
 
-Untuk database yang sudah berisi data, gunakan file pembaruan. `parkir.sql`
-merupakan SQL instalasi baru untuk database kosong. Pengaturan `.env` dan seluruh
-`.htaccess` tetap dipertahankan.
+File yang sama dipakai untuk instalasi baru dan pembaruan. Impor ulang tidak
+menimpa akun/password, tarif, slot, tiket, atau pembayaran lama. Data awal hanya
+dimasukkan jika seluruh tabel aplikasi masih kosong. Pengaturan `.env` dan
+seluruh `.htaccess` tetap dipertahankan.
 
 ## Pemeriksaan berdasarkan pesan
 
@@ -122,8 +128,8 @@ merupakan SQL instalasi baru untuk database kosong. Pengaturan `.env` dan seluru
 | Access denied | Sesuaikan username/password database di `.env` |
 | Unknown database | Buat database `parkir`, lalu jalankan migration |
 | Table users tidak ditemukan | Jalankan migration dan InitialSeeder |
-| Daftar gagal pada database lama | Impor `app/Database/fitur_pengguna_parkir.sql` pada database aplikasi |
-| Area pengguna belum tersedia (503) | Impor `app/Database/fitur_pengguna_parkir.sql`, lalu muat ulang |
+| Daftar gagal pada database lama | Impor `app/Database/parkir.sql` terbaru pada database aplikasi |
+| Area pengguna belum tersedia (503) | Impor `app/Database/parkir.sql` terbaru, lalu muat ulang |
 | Halaman login tanpa desain | Cocokkan `app.baseURL` sampai `/public/`, termasuk port dan seluruh folder |
 | Link berpindah ke localhost:8080 | Ubah baseURL bawaan menjadi alamat Apache yang digunakan |
 | Route /login mendapat 404 | Aktifkan `mod_rewrite` dan izinkan `.htaccess` pada konfigurasi Apache |

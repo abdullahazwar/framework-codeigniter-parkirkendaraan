@@ -23,6 +23,7 @@ dijalankan tanpa memasang atau menjalankan Composer.
 - Pengajuan masuk oleh pengguna, antrean verifikasi petugas, serta permintaan keluar.
 - Riwayat dan bukti bayar pribadi, terhubung ke akun pengaju.
 - Login pengguna, admin, dan petugas dengan pembatasan akses sesuai peran.
+- Satu database dan satu file `app/Database/parkir.sql` untuk seluruh peran.
 - Kendaraan masuk, alokasi slot otomatis, dan tiket yang dapat dicetak.
 - Cari tiket aktif melalui kode atau plat, dilengkapi filter dan pagination.
 - Tarif motor per jam dan mobil bertingkat. Minimal satu jam, pembulatan ke atas.
@@ -99,6 +100,13 @@ PHPUnit. Pengguna XAMPP dapat langsung memakai hasil clone atau Download ZIP.
    Seed tidak menimpa tarif atau password admin yang sudah ada. Hapus nilai
    `parkir.adminPassword` dari `.env` setelah seed berhasil.
 
+   Alternatif melalui phpMyAdmin: pilih database lalu impor
+   [`app/Database/parkir.sql`](app/Database/parkir.sql). File ini menyiapkan seluruh
+   tabel, 30 slot, tarif awal, dan data admin dari dump awal proyek jika seluruh
+   tabel aplikasi masih kosong. Jalur SQL tidak memerlukan migration atau seed.
+   Untuk membuat admin dengan password yang ditentukan sendiri pada instalasi
+   kosong, gunakan jalur migration dan seed di atas.
+
 7. Mulai server lokal.
 
    ```bash
@@ -139,16 +147,20 @@ otomatis menjadi riwayat akun baru.
 
 Setelah mengambil source terbaru, pilih database aplikasi di phpMyAdmin,
 kemudian buka **Import** dan pilih
-[`app/Database/fitur_pengguna_parkir.sql`](app/Database/fitur_pengguna_parkir.sql).
-SQL ini menambah peran `pengguna` dan tabel `kendaraan_pengguna` serta
-`permintaan_parkir`. Akun, kendaraan, tiket, dan pembayaran lama tetap tersimpan.
-SQL boleh diimpor ulang.
+[`app/Database/parkir.sql`](app/Database/parkir.sql).
+Ini satu-satunya file SQL aplikasi, untuk instalasi baru maupun database lama.
+Halaman admin, petugas, dan pengguna memakai tabel yang saling terhubung dalam
+database yang sama. Tampilan yang berbeda tidak membutuhkan file SQL terpisah.
+
+Pada database lama, SQL menambah peran `pengguna` dan tabel fitur yang belum ada.
+Akun beserta passwordnya, kendaraan, tarif, slot, tiket, dan pembayaran lama tetap
+tersimpan. Data awal tidak dimasukkan ulang pada database yang sudah berisi data.
+File ini boleh diimpor ulang.
 
 Mengambil source terbaru tidak otomatis mengubah tabel database lokal. Jika kolom
 `role` masih hanya menerima `admin` dan `petugas`, pendaftaran pengguna akan gagal
-meskipun data formulir sudah valid. File `parkir.sql` untuk instalasi baru sudah
-memuat peran dan tabel pengguna. Database yang sudah terisi cukup memakai SQL
-pembaruan di atas, termasuk jika sebelumnya sudah mengimpor `perbaikan_daftar_user.sql`.
+meskipun data formulir sudah valid. Impor `parkir.sql` yang terbaru untuk
+memperbaikinya sekaligus mengaktifkan fitur pengguna.
 
 Alternatif melalui terminal dari folder proyek:
 
@@ -162,8 +174,8 @@ Pada XAMPP Windows jika PHP belum ada di PATH:
 C:\xampp\php\php.exe spark migrate
 ```
 
-Pilih salah satu cara: impor SQL pembaruan atau jalankan migration.
-Tidak perlu mengimpor ulang `parkir.sql`, menjalankan seed, atau memasang Composer.
+Pilih salah satu cara: impor `parkir.sql` atau jalankan migration.
+Tidak perlu menjalankan seed lagi atau memasang Composer untuk pembaruan.
 Pertahankan `.env` dan seluruh `.htaccess` yang sudah sesuai localhost.
 
 ### Operasional admin dan petugas

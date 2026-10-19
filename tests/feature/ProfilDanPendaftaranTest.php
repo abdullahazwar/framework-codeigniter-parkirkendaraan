@@ -85,10 +85,8 @@ final class ProfilDanPendaftaranTest extends ParkirTestCase
         self::assertSame(2, $this->db->table('users')->countAllResults());
         self::assertStringContainsString('Pendaftaran belum dapat diproses', session('error'));
 
-        $sql = file_get_contents(APPPATH . 'Database/perbaikan_daftar_user.sql');
-        self::assertNotFalse($sql);
-        $this->db->query($sql);
-        $this->db->query($sql);
+        $this->imporSqlParkir();
+        $this->imporSqlParkir();
 
         foreach ($tables as $table) {
             self::assertSame(

@@ -134,7 +134,7 @@ Kolom `users.role` dikembalikan menjadi `ENUM('admin','petugas')` untuk mereprod
 penolakan akun pengguna. Sebuah tiket dan pembayaran juga dibuat agar pengujian
 mencakup database dengan transaksi. Pendaftaran valid ditolak pada skema lama.
 
-File `app/Database/perbaikan_daftar_user.sql` lalu dijalankan dua kali. Pendaftaran
+File SQL pembaruan lalu dijalankan dua kali. Pendaftaran
 dengan data yang sama berhasil dan akun tersimpan sebagai `pengguna`. Seluruh baris
 yang sudah ada pada enam tabel aplikasi tetap sama, termasuk akun dan pembayaran.
 SQL tidak membutuhkan Composer atau perintah migration.
@@ -162,7 +162,7 @@ Pemeriksaan sintaks **132 berkas PHP** dan runtime tanpa Composer juga lulus.
 | SQL | Pembaruan dapat dijalankan berulang tanpa mengubah data kunjungan |
 
 Dump skema lama dengan tiket dan pembayaran diimpor ke database tes terpisah.
-`fitur_pengguna_parkir.sql` dijalankan dua kali, kemudian migration dijalankan.
+SQL pembaruan fitur pengguna dijalankan dua kali, kemudian migration dijalankan.
 Peran dan dua tabel baru tersedia; sidik seluruh baris pada enam tabel aplikasi
 lama tetap sama.
 
@@ -183,3 +183,27 @@ Screenshot dengan data fiktif tersedia pada `screenshots/pengguna-desktop.png`,
 `screenshots/pengguna-tiket-mobile.png`, dan `screenshots/pengguna-bukti-bayar.png`.
 Seluruh `.htaccess`, contoh `.env`, `vendor`, dan dependensi aplikasi tetap sama.
 Tidak ada `.env` lokal yang dibuat atau diubah.
+
+## Satu file SQL untuk seluruh tampilan
+
+Seluruh SQL digabung ke `app/Database/parkir.sql`. Dua file SQL tambahan dihapus;
+migration pengguna membaca bagian skema pengguna dari file yang sama.
+
+Suite lokal lulus: **70 tes, 350 assertion** pada PHP 8.3.6 dan MariaDB 10.11.14.
+Pemeriksaan sintaks **133 berkas PHP** juga lulus. Pengujian mencakup:
+
+- Impor pada database tanpa tabel aplikasi, termasuk pembuatan metadata migration,
+  akun admin dari dump awal, 30 slot, dan dua tarif.
+- Alur pengguna sampai lunas dan pengajuan berikutnya yang masih menunggu.
+  Impor ulang dua kali mempertahankan seluruh baris, password admin yang diubah,
+  tarif khusus, slot nonaktif, tiket, pembayaran, serta riwayat migration.
+- Database lama dengan peran admin/petugas dan transaksi. SQL menambahkan fitur
+  pengguna tanpa menambah ulang slot atau mengubah enam tabel data lama.
+- Regresi pendaftaran pada skema peran lama dan seluruh alur/izin pengguna.
+
+Impor langsung melalui batch SQL juga lulus pada database kosong dan dump lama
+dengan transaksi. `php spark migrate` sesudah kedua impor selesai tanpa
+menjalankan ulang struktur atau mengubah sidik data dan metadata migration.
+
+Admin, petugas, dan pengguna tetap memakai satu database. Tidak ada perubahan
+pada `.htaccess`, `.env`, atau dependensi runtime aplikasi.

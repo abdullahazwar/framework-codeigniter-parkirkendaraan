@@ -9,11 +9,14 @@ final class CreatePenggunaParkirTables extends Migration
 {
     public function up()
     {
-        $sql = file_get_contents(APPPATH . 'Database/fitur_pengguna_parkir.sql');
+        $sql = file_get_contents(APPPATH . 'Database/parkir.sql');
         if ($sql === false) {
-            throw new RuntimeException('SQL fitur pengguna tidak ditemukan.');
+            throw new RuntimeException('SQL parkir tidak ditemukan.');
         }
-        foreach (explode(';', $sql) as $statement) {
+        if (!preg_match('/-- BEGIN PENGGUNA\R(.*?)-- END PENGGUNA/s', $sql, $bagian)) {
+            throw new RuntimeException('Bagian tabel pengguna tidak ditemukan dalam parkir.sql.');
+        }
+        foreach (explode(';', $bagian[1]) as $statement) {
             if (trim($statement) !== '') {
                 $this->db->query($statement);
             }

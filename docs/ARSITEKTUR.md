@@ -134,9 +134,13 @@ verifikasi, sehingga riwayat tidak ditautkan tanpa pemeriksaan petugas. Slot
 diperiksa saat pengajuan dan diperiksa ulang saat verifikasi. Antrean belum
 merupakan reservasi kapasitas.
 
-SQL pembaruan `fitur_pengguna_parkir.sql` dan migration ketiga memakai skema yang
-sama. Import dapat diulang tanpa menghapus transaksi. Rollback migration ditolak
-bila tabel pengguna masih berisi data.
+Seluruh skema dan data awal SQL berada pada `app/Database/parkir.sql`. Migration
+ketiga membaca bagian `BEGIN PENGGUNA` dari file yang sama. Impor penuh memakai
+`CREATE TABLE IF NOT EXISTS`, memperbarui peran, dan mencatat migration yang
+belum terdaftar. Data awal hanya dimasukkan jika delapan tabel aplikasi kosong,
+sehingga impor ulang tidak menimpa pengaturan atau transaksi. Admin, petugas,
+dan pengguna memakai satu database dengan akses sesuai peran. Rollback migration
+ditolak bila tabel pengguna masih berisi data.
 
 ## Hak akses dan keamanan
 

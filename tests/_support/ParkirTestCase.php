@@ -62,4 +62,16 @@ abstract class ParkirTestCase extends CIUnitTestCase
 
         return $user;
     }
+
+    protected function imporSqlParkir(): void
+    {
+        $sql = file_get_contents(APPPATH . 'Database/parkir.sql');
+        self::assertNotFalse($sql);
+        foreach (explode(';', $sql) as $statement) {
+            if (trim($statement) !== '') {
+                $this->db->query($statement);
+            }
+        }
+        $this->db->resetDataCache();
+    }
 }

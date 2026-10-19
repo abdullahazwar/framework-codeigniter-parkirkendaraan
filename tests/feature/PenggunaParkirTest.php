@@ -278,13 +278,8 @@ final class PenggunaParkirTest extends ParkirTestCase
     {
         $id = $this->permintaan();
         $before = $this->service->detail($this->satu, $id);
-        $sql = file_get_contents(APPPATH . 'Database/fitur_pengguna_parkir.sql');
         for ($i = 0; $i < 2; $i++) {
-            foreach (explode(';', $sql) as $statement) {
-                if (trim($statement) !== '') {
-                    $this->db->query($statement);
-                }
-            }
+            $this->imporSqlParkir();
         }
         self::assertSame($before, $this->service->detail($this->satu, $id));
     }
