@@ -3,6 +3,8 @@
 Aplikasi parkir motor dan mobil berbasis CodeIgniter 4, PHP, MySQL/MariaDB,
 dan Bootstrap 5. Dibangun dari rancangan
 [ALUR_SISTEM_PARKIR_PBO_CI4.md](docs/ALUR_SISTEM_PARKIR_PBO_CI4.md).
+- Atur untuk .htacces untuk menjalankannya
+- (pada baris 17 # RewriteBase /namafolder/framework-codeigniter-parkirkendaraan/public/)
 
 Untuk XAMPP Windows dan gejala **Index of /...**, ikuti
 [panduan XAMPP](docs/XAMPP.md). Aplikasi berada di `public/index.php`.
