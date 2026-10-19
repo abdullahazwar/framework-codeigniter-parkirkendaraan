@@ -64,8 +64,28 @@ Simulasi pada server PHP lokal di Linux memakai pola folder pada foto:
 
 Pemeriksaan tambahan tidak mengubah data produksi atau konfigurasi XAMPP pengguna.
 
+## Instalasi bersih tanpa Composer
+
+Salinan dari berkas Git yang akan dikirim diuji di folder terpisah, menggunakan
+bundle runtime bawaan dan database lokal `parkir_standalone_test` yang terpisah.
+Tidak ada perintah Composer pada salinan aplikasi tersebut.
+
+- Versi dan referensi tiga paket runtime cocok dengan `composer.lock`.
+- Autoloader berhasil memuat framework, aplikasi, Laminas Escaper, dan PSR Log.
+- `php spark migrate` dan `php spark db:seed InitialSeeder` berhasil.
+- Login admin berhasil, stylesheet/JavaScript HTTP 200, navigasi subfolder dan
+  menu HP bekerja tanpa error JavaScript.
+- Pemeriksaan sintaks 107 berkas PHP aplikasi lulus.
+
 ## Menjalankan ulang
 
+Checkout atau ZIP bersih sudah berisi dependensi runtime. Jalankan
+`php scripts/check-runtime.php` dan `php scripts/lint.php` tanpa Composer untuk
+memeriksa bundle. Job **Runtime without Composer** memakai PHP 8.2 dan MariaDB
+10.4, lalu menjalankan migration, seed, serta memuat halaman login dan aset lokal
+langsung dari berkas yang di-checkout, tanpa perintah Composer.
+
+Composer hanya diperlukan untuk memasang PHPUnit melalui `composer install`.
 Siapkan `database.tests.*` di `.env`, lalu jalankan `composer test`. Migration dan
 fixture dibuat ulang per test. Jangan memakai data produksi sebagai database tes.
 Fungsi proc_open harus tersedia untuk menjalankan worker konkurensi.

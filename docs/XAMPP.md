@@ -1,5 +1,9 @@
 # Menjalankan proyek di XAMPP Windows
 
+Composer tidak perlu diinstal. Framework, autoloader, dan seluruh dependensi
+runtime sudah disertakan dalam folder `vendor` di repository ini. Bootstrap,
+CSS, dan JavaScript juga tersedia lokal.
+
 ## Mengapa muncul "Index of /..."
 
 Apache sedang membuka folder utama repository. Front controller CodeIgniter ada
@@ -25,12 +29,22 @@ http://localhost/gittugas/parkir/framework-codeigniter-parkirkendaraan/public/
 
    ```bat
    git pull origin main
-   composer install
    ```
 
-   Composer memasang folder `vendor`. Folder ini memang tidak disertakan dalam
-   Git. Composer harus memakai PHP 8.2 atau lebih baru, sama seperti Apache XAMPP.
-   Versi PHP yang tampak pada foto adalah 8.2.12 dan memenuhi kebutuhan aplikasi.
+   Alternatif tanpa Git: pilih **Code > Download ZIP** di GitHub, lalu ekstrak
+   seluruh isinya ke folder pada langkah 2. Pastikan yang dibuka adalah folder
+   yang berisi `app`, `public`, `vendor`, dan `spark`, bukan folder pembungkus ZIP.
+
+   Jika folder `vendor` sebelumnya dibuat sendiri dengan Composer dan `git pull`
+   menolak menimpa file lokal, pindahkan folder `vendor` lama ke luar proyek
+   sebagai cadangan, lalu ulangi `git pull origin main`.
+
+   Gunakan PHP 8.2 atau lebih baru. Versi pada foto, PHP 8.2.12, memenuhi kebutuhan.
+   Opsional, periksa kelengkapan dependensi bawaan tanpa Composer:
+
+   ```bat
+   C:\xampp\php\php.exe scripts\check-runtime.php
+   ```
 
 4. Untuk pemasangan pertama, salin contoh khusus XAMPP:
 
@@ -82,7 +96,7 @@ http://localhost/gittugas/parkir/framework-codeigniter-parkirkendaraan/public/
 | Gejala | Penyelesaian |
 | --- | --- |
 | Index of /... | Buka `/public/`, atau update repository agar pengarah root tersedia |
-| Boot.php atau dependency tidak ditemukan | Jalankan `composer install` dari root proyek |
+| Boot.php atau dependensi tidak ditemukan | Unduh ulang ZIP lengkap dan pastikan seluruh folder `vendor` ikut diekstrak |
 | Ekstensi intl belum aktif | Buka `C:\xampp\php\php.ini`, aktifkan `extension=intl`, restart Apache |
 | PHP CLI berbeda dari Apache | Periksa `where php`, gunakan `C:\xampp\php\php.exe` untuk perintah spark |
 | Access denied | Sesuaikan username/password database di `.env` |

@@ -53,6 +53,14 @@ if (version_compare(PHP_VERSION, $minPhpVersion, '<')) {
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
+if (
+    !is_file(__DIR__ . '/vendor/codeigniter4/framework/system/Boot.php')
+    || !is_file(__DIR__ . '/vendor/autoload.php')
+) {
+    fwrite(STDERR, "Dependensi bawaan proyek tidak lengkap. Ekstrak ulang ZIP repository beserta folder vendor.\n");
+    exit(1);
+}
+
 /*
  *---------------------------------------------------------------
  * SET THE CURRENT DIRECTORY

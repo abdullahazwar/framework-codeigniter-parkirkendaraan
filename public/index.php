@@ -35,11 +35,14 @@ if ($missing !== []) {
     exit(1);
 }
 
-if (!is_file(__DIR__ . '/../vendor/codeigniter4/framework/system/Boot.php')) {
+if (
+    !is_file(__DIR__ . '/../vendor/codeigniter4/framework/system/Boot.php')
+    || !is_file(__DIR__ . '/../vendor/autoload.php')
+) {
     http_response_code(503);
     header('Content-Type: text/plain; charset=UTF-8');
-    echo "Dependency CodeIgniter belum terpasang.\n";
-    echo 'Jalankan composer install dari folder utama proyek, lalu muat ulang halaman.';
+    echo "Dependensi bawaan proyek tidak lengkap.\n";
+    echo 'Unduh ZIP repository terbaru dan ekstrak seluruh folder, termasuk vendor, lalu muat ulang halaman.';
     exit(1);
 }
 

@@ -82,9 +82,20 @@ php_errors.log
 /phpunit
 
 #-------------------------
-# Composer
+# Bundled runtime dependencies. Development-only packages stay local.
 #-------------------------
-/vendor/
+/vendor/*
+!/vendor/autoload.php
+!/vendor/composer/
+!/vendor/codeigniter4/
+!/vendor/laminas/
+!/vendor/psr/
+/vendor/codeigniter4/*
+!/vendor/codeigniter4/framework/
+/vendor/laminas/*
+!/vendor/laminas/laminas-escaper/
+/vendor/psr/*
+!/vendor/psr/log/
 
 #-------------------------
 # IDE / Development Files

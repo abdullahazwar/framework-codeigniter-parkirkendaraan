@@ -47,3 +47,61 @@ jobs:
       - run: composer validate --strict
       - run: composer lint
       - run: composer test
+
+  standalone:
+    name: Runtime without Composer
+    runs-on: ubuntu-latest
+    services:
+      database:
+        image: mariadb:10.4
+        env:
+          MYSQL_DATABASE: parkir_test
+          MYSQL_ROOT_PASSWORD: ci-test-only
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent -h 127.0.0.1 -pci-test-only"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: intl, mbstring, mysqli
+          coverage: none
+      - name: Verify bundled runtime before any Composer command
+        run: php scripts/check-runtime.php
+      - name: Configure isolated installation
+        run: |
+          cat > .env <<'ENV'
+          CI_ENVIRONMENT = production
+          app.baseURL = 'http://127.0.0.1:8080/'
+          database.default.hostname = 127.0.0.1
+          database.default.database = parkir_test
+          database.default.username = root
+          database.default.password = ci-test-only
+          database.default.port = 3306
+          parkir.adminUsername = ci_runtime
+          parkir.adminPassword = ci-standalone-only-123
+          ENV
+      - run: php scripts/lint.php
+      - run: php spark migrate
+      - run: php spark db:seed InitialSeeder
+      - name: Serve login and local assets without Composer
+        run: |
+          php -S 127.0.0.1:8080 -t public > "$RUNNER_TEMP/runtime-http.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          curl --fail --silent --show-error --retry 10 --retry-connrefused --retry-delay 1 \
+            http://127.0.0.1:8080/login --output "$RUNNER_TEMP/login.html"
+          php -r 'if (!str_contains(file_get_contents($argv[1]), "Masuk ke panel")) { exit(1); }' "$RUNNER_TEMP/login.html"
+          for asset in assets/vendor/bootstrap/bootstrap.min.css assets/vendor/bootstrap/bootstrap.bundle.min.js assets/css/style.css assets/js/parkir.js; do
+            curl --fail --silent --show-error "http://127.0.0.1:8080/$asset" --output /dev/null
+          done
+      - name: Show runtime logs on failure
+        if: failure()
+        run: |
+          cat "$RUNNER_TEMP/runtime-http.log" 2>/dev/null || true
+          cat writable/logs/log-*.log 2>/dev/null || true

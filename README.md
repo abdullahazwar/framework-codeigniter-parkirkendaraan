@@ -7,6 +7,8 @@ dan Bootstrap 5. Dibangun dari rancangan
 Untuk XAMPP Windows dan gejala **Index of /...**, ikuti
 [panduan XAMPP](docs/XAMPP.md). Aplikasi berada di `public/index.php`.
 Root proyek mengarahkan browser ke `public/` secara otomatis.
+Dependensi runtime sudah disertakan dalam `vendor`, sehingga aplikasi dapat
+dijalankan tanpa memasang atau menjalankan Composer.
 
 ## Fitur
 
@@ -31,18 +33,20 @@ dan akun admin yang disiapkan sendiri.
 - PHP 8.2 atau lebih baru, 64 bit. Pengujian lokal memakai PHP 8.3.
 - Ekstensi PHP: intl, mbstring, mysqli. Pengujian juga memerlukan dom, xml,
   xmlwriter serta fungsi proc_open untuk skenario konkurensi.
-- Composer 2.
 - MySQL 8.0.16+ atau MariaDB 10.4+ dengan InnoDB.
 - Server Apache/Nginx dengan document root di direktori `public`.
 
+Composer hanya diperlukan pengembang untuk memperbarui dependensi atau memasang
+PHPUnit. Pengguna XAMPP dapat langsung memakai hasil clone atau Download ZIP.
+
 ## Menjalankan lokal
 
-1. Clone dan pasang dependency.
+1. Clone repository lengkap, atau pilih **Code > Download ZIP** di GitHub lalu
+   ekstrak seluruh isinya, termasuk `vendor`.
 
    ```bash
    git clone https://github.com/abdullahazwar/framework-codeigniter-parkirkendaraan.git
    cd framework-codeigniter-parkirkendaraan
-   composer install
    ```
 
 2. Salin konfigurasi contoh.
@@ -56,6 +60,9 @@ dan akun admin yang disiapkan sendiri.
    ```bat
    copy .env.example .env
    ```
+
+   Untuk Apache XAMPP, gunakan `.env.xampp.example` sebagai contoh dan ikuti
+   [panduan XAMPP](docs/XAMPP.md) agar alamat subfolder sesuai.
 
 3. Buat database kosong melalui MySQL atau phpMyAdmin.
 
@@ -138,11 +145,23 @@ tests/
   integration/   Transaksi, snapshot, laporan, konkurensi
   feature/       Login wajib, izin admin, sesi, CSRF
 docs/            Alur, arsitektur, panduan tes, screenshot
+vendor/          CodeIgniter, Laminas Escaper, PSR Log, autoloader dan lisensi
 ```
 
 Penerapan PBO dan diagram class tersedia di [ARSITEKTUR.md](docs/ARSITEKTUR.md).
 
 ## Pengujian
+
+Periksa kelengkapan runtime tanpa Composer:
+
+```bash
+php scripts/check-runtime.php
+php scripts/lint.php
+```
+
+Untuk mengembangkan aplikasi dan menjalankan PHPUnit, pasang Composer 2 dan
+jalankan `composer install`. Langkah ini hanya untuk pengembangan; dependensi
+runtime untuk XAMPP sudah tersedia dalam repository.
 
 Buat database terpisah yang namanya berakhir dengan `_test`. Contoh:
 
@@ -170,7 +189,9 @@ pembayaran tiket yang sama. CI GitHub mengonfigurasi matriks MySQL 8.0 dan Maria
 
 ## Pemasangan server
 
-1. Jalankan `composer install --no-dev --optimize-autoloader` dari lockfile.
+1. Salin repository lengkap, termasuk `vendor`, dan jalankan
+   `php scripts/check-runtime.php`. Gunakan bundle runtime dari repository bersih
+   jika sebelumnya memasang paket pengembangan.
 2. Isi `.env` server sendiri. Jangan memasukkan `.env` ke Git.
 3. Set `CI_ENVIRONMENT = production`, `app.baseURL` ke alamat HTTPS, serta
    `app.forceGlobalSecureRequests = true` dan `Cookie.secure = true`.
@@ -188,3 +209,4 @@ motor/mobil, dan tunai. QRIS, kamera, palang, serta printer khusus berada di lua
 
 Source aplikasi memakai MIT. Hak cipta appstarter CodeIgniter dipertahankan dalam
 `LICENSE`. Lisensi Bootstrap ada di `public/assets/vendor/bootstrap/LICENSE`.
+Daftar versi dan lisensi dependensi bawaan ada di [DEPENDENSI.md](docs/DEPENDENSI.md).
