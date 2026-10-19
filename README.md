@@ -6,7 +6,7 @@ dan Bootstrap 5. Dibangun dari rancangan
 - Atur untuk .htacces untuk menjalankannya
 - (pada baris 17 # RewriteBase /namafolder/framework-codeigniter-parkirkendaraan/public/)
 - lalu masukkan database sql yang sudah tertera
-- jangan lupa untuk configurasi di .env nya sama seperti di .htacces pada base url paste di .env.example ke -> .env
+- jangan lupa untuk configurasi di .env nya sama seperti di .htacces pada base url. salin di .env.example ke -> .env
 
 Untuk XAMPP Windows dan gejala **Index of /...**, ikuti
 [panduan XAMPP](docs/XAMPP.md). Aplikasi berada di `public/index.php`.
