@@ -1,0 +1,39 @@
+{
+    "name": "abdullahazwar/parkir-pbo-ci4",
+    "description": "Sistem manajemen parkir berbasis PBO dengan CodeIgniter 4, MySQL dan Bootstrap 5",
+    "license": "MIT",
+    "type": "project",
+    "require": {
+        "php": "^8.2",
+        "codeigniter4/framework": "^4.7",
+        "ext-intl": "*",
+        "ext-mbstring": "*",
+        "ext-mysqli": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5.16"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Config\\": "app/Config/"
+        },
+        "exclude-from-classmap": [
+            "**/Database/Migrations/**"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Support\\": "tests/_support"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "scripts": {
+        "test": "phpunit",
+        "lint": "@php scripts/lint.php"
+    }
+}
