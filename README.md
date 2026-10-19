@@ -1,4 +1,5 @@
 # Sistem Informasi Manajemen Parkir
+# Tolong ya jika membantu anda beri stars pada source code saya ini
 
 Aplikasi parkir motor dan mobil berbasis CodeIgniter 4, PHP, MySQL/MariaDB,
 dan Bootstrap 5. Dibangun dari rancangan
