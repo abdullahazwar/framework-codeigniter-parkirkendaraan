@@ -10,7 +10,11 @@ final class ConcurrencyTest extends ParkirTestCase
     public function testDuaPetugasBerebutSlotTerakhir(): void
     {
         $results = $this->race('masuk', ['BE1001AA', 'BE1002AA']);
-        self::assertSame(1, count(array_filter($results, static fn($r) => $r['ok'])));
+        self::assertSame(
+            1,
+            count(array_filter($results, static fn($r) => $r['ok'])),
+            json_encode($results),
+        );
         self::assertSame(
             1,
             $this->db->table('tiket_parkir')->where('status', 'aktif')->countAllResults(),
@@ -24,7 +28,11 @@ final class ConcurrencyTest extends ParkirTestCase
             ->table('slot_parkir')
             ->insert(['kode_slot' => 'M02', 'area' => 'Utama', 'jenis' => 'motor', 'aktif' => 1]);
         $results = $this->race('masuk', ['BE2001AA', 'BE2001AA']);
-        self::assertSame(1, count(array_filter($results, static fn($r) => $r['ok'])));
+        self::assertSame(
+            1,
+            count(array_filter($results, static fn($r) => $r['ok'])),
+            json_encode($results),
+        );
         self::assertSame(1, $this->db->table('tiket_parkir')->countAllResults());
     }
 
@@ -32,7 +40,11 @@ final class ConcurrencyTest extends ParkirTestCase
     {
         $id = (new ParkirService($this->db))->kendaraanMasuk('BE3001AA', 'motor', $this->petugasId);
         $results = $this->race('bayar', [(string) $id, (string) $id]);
-        self::assertSame(1, count(array_filter($results, static fn($r) => $r['ok'])));
+        self::assertSame(
+            1,
+            count(array_filter($results, static fn($r) => $r['ok'])),
+            json_encode($results),
+        );
         self::assertSame(1, $this->db->table('pembayaran')->countAllResults());
         self::assertSame(
             'selesai',

@@ -3,6 +3,9 @@
 // Separate PHP process and database connection for actual concurrent requests.
 require dirname(__DIR__, 2) . '/vendor/codeigniter4/framework/system/Test/bootstrap.php';
 
+// bootTest does not initialize a web/CLI application. Match its configured clock.
+date_default_timezone_set(config('App')->appTimezone);
+
 use App\Exceptions\AturanParkirException;
 use App\Services\ParkirService;
 use Config\Database;
