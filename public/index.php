@@ -23,6 +23,26 @@ if (version_compare(PHP_VERSION, $minPhpVersion, '<')) {
     exit(1);
 }
 
+$missing = array_filter(
+    ['intl', 'mbstring', 'mysqli'],
+    static fn(string $extension): bool => !extension_loaded($extension),
+);
+if ($missing !== []) {
+    http_response_code(503);
+    header('Content-Type: text/plain; charset=UTF-8');
+    echo 'Ekstensi PHP belum aktif: ' . implode(', ', $missing) . ".\n";
+    echo 'Aktifkan ekstensi tersebut di php.ini XAMPP, lalu restart Apache.';
+    exit(1);
+}
+
+if (!is_file(__DIR__ . '/../vendor/codeigniter4/framework/system/Boot.php')) {
+    http_response_code(503);
+    header('Content-Type: text/plain; charset=UTF-8');
+    echo "Dependency CodeIgniter belum terpasang.\n";
+    echo 'Jalankan composer install dari folder utama proyek, lalu muat ulang halaman.';
+    exit(1);
+}
+
 /*
  *---------------------------------------------------------------
  * SET THE CURRENT DIRECTORY

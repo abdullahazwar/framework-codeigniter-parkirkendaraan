@@ -50,11 +50,26 @@ Screenshot tersedia di `docs/screenshots`. Pemeriksaan viewport merupakan simula
 bukan pengujian perangkat fisik. Cetak memakai browser dan belum diuji pada printer
 fisik. Pengujian ini tidak menyatakan sertifikasi aksesibilitas atau audit penetrasi.
 
+## Regresi akses subfolder localhost
+
+Simulasi pada server PHP lokal di Linux memakai pola folder pada foto:
+`/gittugas/parkir/framework-codeigniter-parkirkendaraan/`.
+
+- Root mengirim HTTP 302 dengan Location `public/`.
+- Form login tampil pada `/public/` dan login berhasil.
+- Seluruh stylesheet dan JavaScript memakai prefix folder yang benar, HTTP 200.
+- Dashboard, kendaraan masuk, serta riwayat bekerja pada URL bersubfolder.
+- Penanda menu aktif dan navigasi HP bekerja.
+- Bootstrap menampilkan petunjuk jika ekstensi PHP belum aktif.
+
+Pemeriksaan tambahan tidak mengubah data produksi atau konfigurasi XAMPP pengguna.
+
 ## Menjalankan ulang
 
 Siapkan `database.tests.*` di `.env`, lalu jalankan `composer test`. Migration dan
 fixture dibuat ulang per test. Jangan memakai data produksi sebagai database tes.
 Fungsi proc_open harus tersedia untuk menjalankan worker konkurensi.
 
-Workflow `.github/workflows/tests.yml` menyiapkan PHP 8.3 dan dua engine database.
+Workflow `.github/workflows/tests.yml` menyiapkan PHP 8.2 dengan MySQL 8.0,
+MariaDB 10.11, dan MariaDB 10.4 untuk memeriksa kompatibilitas XAMPP.
 Status workflow di GitHub harus dilihat terpisah dari hasil MariaDB lokal.

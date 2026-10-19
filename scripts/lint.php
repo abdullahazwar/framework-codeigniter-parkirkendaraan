@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__);
-$files = [];
+$files = [$root . '/index.php'];
 foreach (['app', 'tests', 'scripts', 'public'] as $folder) {
     $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root . '/' . $folder));
     foreach ($iterator as $file) {

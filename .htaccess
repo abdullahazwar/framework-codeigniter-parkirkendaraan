@@ -1,0 +1,13 @@
+Options -Indexes
+DirectoryIndex index.php
+
+# The application is served only from public/, including in an htdocs subfolder.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(?:app|vendor|writable|tests|scripts|docs)(?:/|$) - [F,L,NC]
+    RewriteRule ^\. - [F,L]
+</IfModule>
+
+<FilesMatch "(^\.|^(composer\.(json|lock)|phpunit.*\.xml|spark|README\.md|LICENSE)$)">
+    Require all denied
+</FilesMatch>

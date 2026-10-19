@@ -4,6 +4,10 @@ Aplikasi parkir motor dan mobil berbasis CodeIgniter 4, PHP, MySQL/MariaDB,
 dan Bootstrap 5. Dibangun dari rancangan
 [ALUR_SISTEM_PARKIR_PBO_CI4.md](docs/ALUR_SISTEM_PARKIR_PBO_CI4.md).
 
+Untuk XAMPP Windows dan gejala **Index of /...**, ikuti
+[panduan XAMPP](docs/XAMPP.md). Aplikasi berada di `public/index.php`.
+Root proyek mengarahkan browser ke `public/` secara otomatis.
+
 ## Fitur
 
 - Login admin dan petugas dengan pembatasan akses.
@@ -28,7 +32,7 @@ dan akun admin yang disiapkan sendiri.
 - Ekstensi PHP: intl, mbstring, mysqli. Pengujian juga memerlukan dom, xml,
   xmlwriter serta fungsi proc_open untuk skenario konkurensi.
 - Composer 2.
-- MySQL 8.0.16+ atau MariaDB 10.6+ dengan InnoDB.
+- MySQL 8.0.16+ atau MariaDB 10.4+ dengan InnoDB.
 - Server Apache/Nginx dengan document root di direktori `public`.
 
 ## Menjalankan lokal
@@ -161,7 +165,8 @@ composer audit
 Suite memakai MySQL/MariaDB sungguhan. Uji konkurensi menjalankan dua proses PHP
 dengan koneksi terpisah dan barrier, termasuk perebutan slot terakhir dan
 pembayaran tiket yang sama. CI GitHub mengonfigurasi matriks MySQL 8.0 dan MariaDB
-10.11. Bukti pengujian lokal dan cakupannya ada di [PENGUJIAN.md](docs/PENGUJIAN.md).
+10.11 serta 10.4 dengan PHP 8.2. Bukti pengujian lokal dan cakupannya ada di
+[PENGUJIAN.md](docs/PENGUJIAN.md).
 
 ## Pemasangan server
 

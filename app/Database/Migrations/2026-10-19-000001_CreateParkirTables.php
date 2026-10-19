@@ -10,7 +10,7 @@ final class CreateParkirTables extends Migration
     public function up()
     {
         if ($this->db->DBDriver !== 'MySQLi') {
-            throw new RuntimeException('Proyek ini memerlukan MySQL 8.0.16+ atau MariaDB 10.6+.');
+            throw new RuntimeException('Proyek ini memerlukan MySQL 8.0.16+ atau MariaDB 10.4+.');
         }
         $version = $this->db->query('SELECT VERSION() AS version')->getRowArray()['version'];
         $maria = stripos($version, 'MariaDB') !== false;
@@ -18,9 +18,9 @@ final class CreateParkirTables extends Migration
         if (
             PHP_INT_SIZE < 8 ||
             !isset($match[1]) ||
-            version_compare($match[1], $maria ? '10.6.0' : '8.0.16', '<')
+            version_compare($match[1], $maria ? '10.4.0' : '8.0.16', '<')
         ) {
-            throw new RuntimeException('Gunakan PHP 64 bit dan MySQL 8.0.16+ atau MariaDB 10.6+.');
+            throw new RuntimeException('Gunakan PHP 64 bit dan MySQL 8.0.16+ atau MariaDB 10.4+.');
         }
 
         $tables = [
