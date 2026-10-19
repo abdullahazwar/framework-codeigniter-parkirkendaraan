@@ -127,3 +127,18 @@ terpisah dari bundle runtime aplikasi.
 
 Screenshot yang ditinjau tersedia pada `screenshots/profil-desktop.png` dan
 `screenshots/daftar-mobile.png`. Tampilan HP diperiksa melalui simulasi viewport.
+
+## Regresi SQL pendaftaran pada database lama
+
+Kolom `users.role` dikembalikan menjadi `ENUM('admin','petugas')` untuk mereproduksi
+penolakan akun pengguna. Sebuah tiket dan pembayaran juga dibuat agar pengujian
+mencakup database dengan transaksi. Pendaftaran valid ditolak pada skema lama.
+
+File `app/Database/perbaikan_daftar_user.sql` lalu dijalankan dua kali. Pendaftaran
+dengan data yang sama berhasil dan akun tersimpan sebagai `pengguna`. Seluruh baris
+yang sudah ada pada enam tabel aplikasi tetap sama, termasuk akun dan pembayaran.
+SQL tidak membutuhkan Composer atau perintah migration.
+
+Suite akhir lulus: 44 tes, 198 assertion pada PHP 8.3.6 dan MariaDB 10.11.14.
+Pemeriksaan sintaks controller dan tes yang diubah juga lulus. Seluruh `.htaccess`
+dan contoh `.env` tetap sama; `.env` lokal tidak dibuat atau diedit.

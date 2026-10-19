@@ -113,7 +113,18 @@ untuk admin dan petugas. Akun pengguna tidak menyediakan reservasi slot.
 
 ### Pembaruan instalasi yang sudah berjalan
 
-Setelah mengambil source terbaru, jalankan satu kali dari folder proyek:
+Setelah mengambil source terbaru, pilih database aplikasi di phpMyAdmin,
+kemudian buka **Import** dan pilih
+[`app/Database/perbaikan_daftar_user.sql`](app/Database/perbaikan_daftar_user.sql).
+SQL ini menambah pilihan peran `pengguna` pada kolom `users.role` tanpa menghapus
+akun, kendaraan, tiket, atau pembayaran. SQL boleh diimpor ulang.
+
+Mengambil source terbaru tidak otomatis mengubah tabel database lokal. Jika kolom
+`role` masih hanya menerima `admin` dan `petugas`, pendaftaran pengguna akan gagal
+meskipun data formulir sudah valid. File `parkir.sql` untuk instalasi baru sudah
+memuat peran pengguna. Database yang sudah terisi cukup memakai file perbaikan.
+
+Alternatif melalui terminal dari folder proyek:
 
 ```bash
 php spark migrate
@@ -125,10 +136,9 @@ Pada XAMPP Windows jika PHP belum ada di PATH:
 C:\xampp\php\php.exe spark migrate
 ```
 
-Migration menambah peran `pengguna` tanpa menghapus akun atau transaksi lama.
-Tidak perlu mengimpor ulang SQL, menjalankan seed, atau memasang Composer.
+Pilih salah satu cara: impor SQL perbaikan atau jalankan migration.
+Tidak perlu mengimpor ulang `parkir.sql`, menjalankan seed, atau memasang Composer.
 Pertahankan `.env` dan seluruh `.htaccess` yang sudah sesuai localhost.
-SQL untuk instalasi baru juga sudah memuat peran pengguna.
 
 ### Operasional admin dan petugas
 

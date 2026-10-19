@@ -109,7 +109,7 @@ final class AuthController extends BaseController
             ]);
         } catch (Throwable) {
             return $this->registrationError(
-                'Akun belum tersimpan. Gunakan username lain atau hubungi pengelola jika masalah berlanjut.',
+                'Pendaftaran belum dapat diproses. Hubungi pengelola lokasi parkir.',
             );
         }
         if (!$saved) {

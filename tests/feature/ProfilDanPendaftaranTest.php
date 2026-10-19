@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Services\ParkirService;
 use CodeIgniter\Security\Exceptions\SecurityException;
 use CodeIgniter\Test\FeatureTestTrait;
 use CodeIgniter\Test\TestResponse;
@@ -62,6 +63,45 @@ final class ProfilDanPendaftaranTest extends ParkirTestCase
         self::assertSame($count, $this->db->table('users')->countAllResults());
         self::assertArrayHasKey('username', session('errors'));
         self::assertSame('admin', $this->user($this->adminId)['role']);
+    }
+
+    public function testSqlMemperbaikiPendaftaranPadaSkemaLamaTanpaMengubahData(): void
+    {
+        $this->db->query(
+            "ALTER TABLE users MODIFY role ENUM('admin','petugas') NOT NULL DEFAULT 'petugas'",
+        );
+        $parkir = new ParkirService($this->db);
+        $tiket = $parkir->kendaraanMasuk('BE9912AA', 'motor', $this->petugasId);
+        $parkir->kendaraanKeluar($tiket, $this->petugasId, 10000, 3000);
+
+        $tables = ['users', 'kendaraan', 'slot_parkir', 'tarif', 'tiket_parkir', 'pembayaran'];
+        $before = [];
+        foreach ($tables as $table) {
+            $before[$table] = $this->db->table($table)->orderBy('id')->get()->getResultArray();
+        }
+
+        // A valid account is rejected while the existing column only accepts staff roles.
+        $this->daftar()->assertRedirectTo('/daftar');
+        self::assertSame(2, $this->db->table('users')->countAllResults());
+        self::assertStringContainsString('Pendaftaran belum dapat diproses', session('error'));
+
+        $sql = file_get_contents(APPPATH . 'Database/perbaikan_daftar_user.sql');
+        self::assertNotFalse($sql);
+        $this->db->query($sql);
+        $this->db->query($sql);
+
+        foreach ($tables as $table) {
+            self::assertSame(
+                $before[$table],
+                $this->db->table($table)->orderBy('id')->get()->getResultArray(),
+                'SQL pembaruan tidak boleh mengubah data ' . $table,
+            );
+        }
+
+        $this->daftar()->assertRedirectTo('/login');
+        $user = $this->db->table('users')->where('username', 'pengguna_baru')->get()->getRowArray();
+        self::assertSame('pengguna', $user['role']);
+        self::assertTrue(password_verify('PasswordKhususTes123', $user['password_hash']));
     }
 
     public function testKonfirmasiSalahTidakMenyimpanPasswordDalamSession(): void

@@ -6,6 +6,11 @@
 -- Generation Time: Oct 19, 2026 at 12:31 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
+--
+-- Untuk instalasi baru pada database kosong.
+-- Tabel users sudah mendukung peran admin, petugas, dan pengguna.
+-- Untuk memperbaiki pendaftaran pada database yang sudah berisi data,
+-- impor perbaikan_daftar_user.sql pada database aplikasi yang sama.
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;

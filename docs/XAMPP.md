@@ -91,6 +91,22 @@ http://localhost/gittugas/parkir/framework-codeigniter-parkirkendaraan/public/
 
 7. Buka URL aplikasi di atas, lalu tekan Ctrl+F5 untuk memuat ulang aset.
 
+## Memperbaiki pendaftaran pada database lama
+
+1. Ambil source terbaru dari branch `main`.
+2. Buka phpMyAdmin dan pilih database yang sedang dipakai aplikasi.
+3. Pilih **Import**, lalu impor `app/Database/perbaikan_daftar_user.sql`.
+4. Ulangi pendaftaran melalui halaman Daftar.
+
+Skema lama hanya menerima peran `admin` dan `petugas`. Akun yang didaftarkan
+melalui web memakai peran `pengguna`, sehingga database lama menolak penyimpanan.
+SQL perbaikan memperbarui kolom peran tanpa menghapus data. SQL ini boleh diimpor
+ulang dan tidak membutuhkan Composer atau perintah terminal.
+
+Untuk database yang sudah berisi data, gunakan file perbaikan. `parkir.sql`
+merupakan SQL instalasi baru untuk database kosong. Pengaturan `.env` dan seluruh
+`.htaccess` tetap dipertahankan.
+
 ## Pemeriksaan berdasarkan pesan
 
 | Gejala | Penyelesaian |
@@ -102,6 +118,7 @@ http://localhost/gittugas/parkir/framework-codeigniter-parkirkendaraan/public/
 | Access denied | Sesuaikan username/password database di `.env` |
 | Unknown database | Buat database `parkir`, lalu jalankan migration |
 | Table users tidak ditemukan | Jalankan migration dan InitialSeeder |
+| Daftar gagal pada database lama | Impor `app/Database/perbaikan_daftar_user.sql` pada database aplikasi |
 | Halaman login tanpa desain | Cocokkan `app.baseURL` sampai `/public/`, termasuk port dan seluruh folder |
 | Link berpindah ke localhost:8080 | Ubah baseURL bawaan menjadi alamat Apache yang digunakan |
 | Route /login mendapat 404 | Aktifkan `mod_rewrite` dan izinkan `.htaccess` pada konfigurasi Apache |
