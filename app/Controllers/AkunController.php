@@ -8,6 +8,10 @@ final class AkunController extends BaseController
 {
     public function index()
     {
+        if (session('user.role') === 'pengguna') {
+            return redirect()->route('pengguna.beranda');
+        }
+
         return view('akun/index', [
             'title' => 'Akun saya',
             'privatePage' => true,

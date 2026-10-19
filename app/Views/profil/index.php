@@ -50,8 +50,9 @@
             <p>Parkir adalah web untuk membantu pengelola menangani aktivitas parkir di satu
                 lokasi. Admin mengatur tarif, slot, dan petugas. Petugas mencatat kendaraan
                 masuk hingga pembayaran saat kendaraan keluar.</p>
-            <p>Pengunjung dapat mempelajari layanan dan membuat akun pengguna. Setelah masuk,
-                informasi akun serta tarif motor dan mobil tersedia di halaman Akun Saya.</p>
+            <p>Pengguna dapat menyimpan kendaraan, mengajukan masuk saat tiba di lokasi,
+                melihat tiket dan estimasi tagihan, meminta keluar, serta membuka riwayat
+                pembayaran melalui area pengguna.</p>
             <div class="service-tags" aria-label="Cakupan layanan">
                 <span>Motor &amp; mobil</span><span>Tiket parkir</span><span>Pembayaran tunai</span>
             </div>
@@ -101,8 +102,9 @@
             <li>
                 <span class="step-number" aria-hidden="true">1</span>
                 <div><h3>Catat kendaraan saat masuk</h3>
-                    <p>Petugas memasukkan plat nomor dan jenis kendaraan. Sistem menentukan
-                        slot yang tersedia lalu menerbitkan tiket masuk.</p></div>
+                    <p>Ajukan dari area pengguna saat tiba di lokasi, lalu tunjukkan kode dan
+                        kendaraan kepada petugas. Setelah diverifikasi, sistem menerbitkan tiket
+                        dan menentukan slot yang tersedia.</p></div>
             </li>
             <li>
                 <span class="step-number" aria-hidden="true">2</span>
@@ -129,8 +131,9 @@
         <div class="faq-list">
             <details open>
                 <summary>Apa fungsi akun pengguna?</summary>
-                <p>Akun pengguna memberi akses ke profil akun dan informasi tarif yang
-                    ditetapkan pengelola. Pendaftaran cukup memakai nama, username, dan password.</p>
+                <p>Akun pengguna menyimpan kendaraan, permintaan masuk, tiket aktif, estimasi
+                    tagihan, dan riwayat kunjungan sendiri. Pendaftaran cukup memakai nama,
+                    username, dan password.</p>
             </details>
             <details>
                 <summary>Apakah akun wajib untuk parkir?</summary>
@@ -145,8 +148,9 @@
             </details>
             <details>
                 <summary>Apakah bisa memesan slot dari web?</summary>
-                <p>Alokasi slot dilakukan saat petugas mencatat kendaraan masuk di lokasi.
-                    Akun pengguna belum menyediakan pemesanan slot secara daring.</p>
+                <p>Permintaan masuk diajukan saat sudah tiba di lokasi. Permintaan belum
+                    mengunci slot. Petugas memeriksa kendaraan dan ketersediaan tempat sebelum
+                    mengonfirmasi masuk serta mengalokasikan slot.</p>
             </details>
             <details>
                 <summary>Siapa yang mengelola tiket dan pembayaran?</summary>
@@ -160,9 +164,9 @@
 <section class="account-invite" aria-labelledby="invite-title">
     <div class="public-container invite-inner">
         <div><p class="eyebrow">AKUN PENGGUNA</p>
-            <h2 id="invite-title">Informasi Parkir dalam satu akun.</h2>
-            <p>Lihat profil akun dan tarif parkir yang berlaku.</p></div>
-        <?php $accountRoute = session('user.role') === 'pengguna' ? 'akun' : 'dashboard'; ?>
+            <h2 id="invite-title">Kendaraan, tiket, dan riwayat dalam satu akun.</h2>
+            <p>Ajukan masuk, pantau parkir, dan buka kembali bukti pembayaran.</p></div>
+        <?php $accountRoute = session('user.role') === 'pengguna' ? 'pengguna.beranda' : 'dashboard'; ?>
         <a class="btn btn-primary" href="<?= url_to(session('user') ? $accountRoute : 'daftar') ?>">
             <?= session('user') ? 'Buka akun saya' : 'Buat akun pengguna' ?>
             <span aria-hidden="true">↗</span>

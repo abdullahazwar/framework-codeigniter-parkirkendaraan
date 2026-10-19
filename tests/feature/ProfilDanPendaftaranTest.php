@@ -163,13 +163,14 @@ final class ProfilDanPendaftaranTest extends ParkirTestCase
             'username' => 'pengguna_uji',
             'password' => 'PasswordKhususTes123',
             csrf_token() => $token,
-        ])->assertRedirectTo('/akun');
+        ])->assertRedirectTo('/pengguna');
         self::assertArrayNotHasKey('password_hash', session('user'));
         $this->db->table('tarif')->where('jenis', 'motor')->update([
             'tarif_awal' => 7000,
             'tarif_lanjutan' => 7000,
         ]);
-        $result = $this->withSession(['user' => $this->user($id)])->get('akun');
+        $this->withSession(['user' => $this->user($id)])->get('akun')->assertRedirectTo('/pengguna');
+        $result = $this->withSession(['user' => $this->user($id)])->get('pengguna/profil');
         $result->assertStatus(200);
         $result->assertSee('Rp7.000');
         $result->assertSee('pengguna_uji');
@@ -210,7 +211,7 @@ final class ProfilDanPendaftaranTest extends ParkirTestCase
     {
         $user = $this->user($this->buatPengguna());
         foreach (['login', 'daftar'] as $path) {
-            $this->withSession(['user' => $user])->get($path)->assertRedirectTo('/akun');
+            $this->withSession(['user' => $user])->get($path)->assertRedirectTo('/pengguna');
         }
     }
 

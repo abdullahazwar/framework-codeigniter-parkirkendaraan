@@ -4,7 +4,7 @@
     <section class="auth-intro" aria-labelledby="login-intro-title">
         <p class="eyebrow">SELAMAT DATANG KEMBALI</p>
         <h1 id="login-intro-title">Satu akun.<br>Akses sesuai peran.</h1>
-        <p>Pengguna dapat melihat profil akun dan tarif parkir. Admin dan petugas dapat
+        <p>Pengguna dapat mengelola kendaraan, tiket, dan riwayat parkir. Admin dan petugas dapat
             melanjutkan pengelolaan kendaraan di panel operasional.</p>
         <a class="text-link" href="<?= url_to('beranda') ?>#tentang">Kenali web Parkir <span aria-hidden="true">↗</span></a>
     </section>

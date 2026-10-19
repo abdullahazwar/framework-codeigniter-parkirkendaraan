@@ -1,7 +1,7 @@
-<?= $this->extend('layouts/public') ?>
+<?= $this->extend($layout ?? 'layouts/public') ?>
 <?= $this->section('content') ?>
-<div class="public-container account-content">
-    <?= $this->include('partials/alerts') ?>
+<div class="<?= isset($layout) ? 'member-account-content' : 'public-container account-content' ?>">
+    <?php if (!isset($layout)): ?><?= $this->include('partials/alerts') ?><?php endif; ?>
     <header class="account-heading">
         <p class="eyebrow">AKUN SAYA</p>
         <h1>Halo, <?= esc($user['nama']) ?>.</h1>

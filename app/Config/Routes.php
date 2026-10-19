@@ -14,7 +14,27 @@ $routes->post('daftar', 'AuthController::storeRegistration', ['as' => 'daftar.su
 $routes->group('', ['filter' => 'auth'], static function (RouteCollection $routes) {
     $routes->post('logout', 'AuthController::logout', ['as' => 'logout']);
     $routes->get('akun', 'AkunController::index', ['as' => 'akun']);
+    $routes->group('pengguna', ['filter' => 'pengguna'], static function (RouteCollection $routes) {
+        $routes->get('/', 'PenggunaController::index', ['as' => 'pengguna.beranda']);
+        $routes->get('kendaraan', 'PenggunaController::kendaraan', ['as' => 'pengguna.kendaraan']);
+        $routes->post('kendaraan', 'PenggunaController::tambahKendaraan', ['as' => 'pengguna.kendaraan.tambah']);
+        $routes->post('kendaraan/(:num)/hapus', 'PenggunaController::hapusKendaraan/$1',
+            ['as' => 'pengguna.kendaraan.hapus']);
+        $routes->get('parkir', 'PenggunaController::parkir', ['as' => 'pengguna.parkir']);
+        $routes->post('parkir', 'PenggunaController::ajukan', ['as' => 'pengguna.ajukan']);
+        $routes->get('tiket/(:num)', 'PenggunaController::tiket/$1', ['as' => 'pengguna.tiket']);
+        $routes->post('tiket/(:num)/batal', 'PenggunaController::batalkan/$1', ['as' => 'pengguna.batal']);
+        $routes->post('tiket/(:num)/keluar', 'PenggunaController::mintaKeluar/$1',
+            ['as' => 'pengguna.keluar']);
+        $routes->get('riwayat', 'PenggunaController::riwayat', ['as' => 'pengguna.riwayat']);
+        $routes->get('profil', 'PenggunaController::profil', ['as' => 'pengguna.profil']);
+    });
     $routes->group('', ['filter' => 'staff'], static function (RouteCollection $routes) {
+        $routes->get('permintaan', 'PermintaanController::index', ['as' => 'permintaan']);
+        $routes->post('permintaan/(:num)/terima', 'PermintaanController::terima/$1',
+            ['as' => 'permintaan.terima']);
+        $routes->post('permintaan/(:num)/tolak', 'PermintaanController::tolak/$1',
+            ['as' => 'permintaan.tolak']);
         $routes->get('dashboard', 'DashboardController::index', ['as' => 'dashboard']);
         $routes->get('parkir/masuk', 'ParkirController::masuk', ['as' => 'parkir.masuk']);
         $routes->post('parkir/masuk', 'ParkirController::simpanMasuk', ['as' => 'parkir.simpan']);

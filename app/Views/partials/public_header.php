@@ -1,6 +1,6 @@
 <?php
 $currentPath = trim(service('request')->getUri()->getRoutePath(), '/');
-$accountRoute = session('user.role') === 'pengguna' ? 'akun' : 'dashboard';
+$accountRoute = session('user.role') === 'pengguna' ? 'pengguna.beranda' : 'dashboard';
 ?>
 <header class="public-header">
     <div class="public-container header-inner">

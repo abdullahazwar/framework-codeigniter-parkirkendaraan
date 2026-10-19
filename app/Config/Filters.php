@@ -4,6 +4,7 @@ namespace Config;
 
 use App\Filters\AdminFilter;
 use App\Filters\AuthFilter;
+use App\Filters\PenggunaFilter;
 use App\Filters\StaffFilter;
 use CodeIgniter\Config\Filters as BaseFilters;
 use CodeIgniter\Filters\CSRF;
@@ -20,6 +21,7 @@ class Filters extends BaseFilters
         'secureheaders' => SecureHeaders::class,
         'auth' => AuthFilter::class,
         'staff' => StaffFilter::class,
+        'pengguna' => PenggunaFilter::class,
         'admin' => AdminFilter::class,
     ];
     public array $required = ['before' => ['forcehttps'], 'after' => []];

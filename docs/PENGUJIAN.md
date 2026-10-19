@@ -142,3 +142,44 @@ SQL tidak membutuhkan Composer atau perintah migration.
 Suite akhir lulus: 44 tes, 198 assertion pada PHP 8.3.6 dan MariaDB 10.11.14.
 Pemeriksaan sintaks controller dan tes yang diubah juga lulus. Seluruh `.htaccess`
 dan contoh `.env` tetap sama; `.env` lokal tidak dibuat atau diedit.
+
+## Alur pengguna parkir
+
+Pembaruan area `/pengguna` diperiksa pada PHP 8.3.6, MariaDB 10.11.14,
+PHPUnit 10.5.66, dan Chromium headless 133. Seluruh suite lulus: **68 tes**.
+Pemeriksaan sintaks **132 berkas PHP** dan runtime tanpa Composer juga lulus.
+
+| Area | Hasil yang diperiksa |
+| --- | --- |
+| Kunjungan lengkap | Simpan kendaraan, ajukan masuk, verifikasi petugas, tiket/slot aktif, minta keluar, tunai, bukti bayar/riwayat |
+| Kepemilikan | Kendaraan akun lain tidak bisa dipakai/dilepas; permintaan akun lain tidak bisa dibaca, dibatalkan, atau diminta keluar |
+| Riwayat | Tiket walk-in tidak diklaim lewat plat; melepas dan mendaftarkan kembali kendaraan tidak memindahkan riwayat |
+| Kapasitas | Pengajuan tidak mengunci slot; slot penuh saat pengajuan/verifikasi ditolak tanpa tiket sisa |
+| Status | Pembatalan sebelum masuk, penolakan dengan alasan, pengajuan ulang, pembayaran langsung petugas |
+| Izin | Tamu harus login; pengguna mendapat 403 pada antrean/konfirmasi/pembayaran petugas; admin tidak masuk area pengguna |
+| Integritas | Verifikasi wajib mencocokkan kendaraan; CSRF wajib; gagal mengaitkan tiket atau menyelesaikan permintaan membatalkan seluruh transaksi |
+| Konkurensi | Dua proses mengajukan/menerima permintaan sama, membatalkan sambil menerima, dan meminta keluar sambil membayar |
+| SQL | Pembaruan dapat dijalankan berulang tanpa mengubah data kunjungan |
+
+Dump skema lama dengan tiket dan pembayaran diimpor ke database tes terpisah.
+`fitur_pengguna_parkir.sql` dijalankan dua kali, kemudian migration dijalankan.
+Peran dan dua tabel baru tersedia; sidik seluruh baris pada enam tabel aplikasi
+lama tetap sama.
+
+Browser menguji alur yang sama pada URL biasa dan simulasi subfolder
+`/gittugas/parkir/framework-codeigniter-parkirkendaraan/public/`. Beranda pengguna,
+kendaraan, parkir, riwayat, profil, tiket aktif, bukti bayar, dan antrean petugas
+diperiksa pada lebar 320, 390, 768, dan 1440 piksel tanpa overflow horizontal.
+Alur juga memeriksa alasan penolakan, pembatalan, akses akun lain (404), dan panel
+petugas (403). Tidak ditemukan error JavaScript selama alur tersebut.
+
+Menu pengguna dapat ditutup dengan Escape dan mengembalikan fokus ke tombol.
+CSS cetak menyembunyikan navigasi serta panel tindakan. Login, navigasi, riwayat,
+dan bukti bayar juga berhasil pada viewport 320 piksel dengan JavaScript dimatikan.
+Pemeriksaan ini memakai Linux dengan server PHP lokal, bukan Apache Windows atau
+printer fisik.
+
+Screenshot dengan data fiktif tersedia pada `screenshots/pengguna-desktop.png`,
+`screenshots/pengguna-tiket-mobile.png`, dan `screenshots/pengguna-bukti-bayar.png`.
+Seluruh `.htaccess`, contoh `.env`, `vendor`, dan dependensi aplikasi tetap sama.
+Tidak ada `.env` lokal yang dibuat atau diubah.

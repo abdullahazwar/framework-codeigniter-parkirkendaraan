@@ -21,3 +21,25 @@ function nav_aktif(string $path): string
 
     return $uri === $path || str_starts_with($uri, $path . '/') ? 'active' : '';
 }
+
+function status_pengguna(string $status): string
+{
+    return [
+        'menunggu' => 'Menunggu verifikasi',
+        'aktif' => 'Sedang parkir',
+        'minta_keluar' => 'Menunggu pembayaran',
+        'selesai' => 'Selesai',
+        'dibatalkan' => 'Dibatalkan',
+        'ditolak' => 'Ditolak petugas',
+    ][$status] ?? 'Status belum tersedia';
+}
+
+function warna_status_pengguna(string $status): string
+{
+    return match ($status) {
+        'aktif' => 'status-active',
+        'selesai' => 'status-complete',
+        'ditolak', 'dibatalkan' => 'status-closed',
+        default => 'status-waiting',
+    };
+}

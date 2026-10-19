@@ -101,6 +101,7 @@ jobs:
             assets/vendor/bootstrap/bootstrap.min.css \
             assets/vendor/bootstrap/bootstrap.bundle.min.js \
             assets/css/style.css assets/css/public.css \
+            assets/css/pengguna.css assets/css/permintaan.css \
             assets/js/parkir.js assets/js/public.js; do
             curl --fail --silent --show-error "http://127.0.0.1:8080/$asset" --output /dev/null
           done

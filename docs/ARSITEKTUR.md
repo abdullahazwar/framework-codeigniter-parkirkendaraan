@@ -75,7 +75,8 @@ unik, deadlock, atau lock timeout. Pengujian memakai proses dan koneksi terpisah
 3. Pakai tarif snapshot saat masuk, bukan tarif master yang mungkin sudah berubah.
 4. Jika jam penagihan berubah sejak layar dibuka, minta peninjauan ulang.
 5. Validasi uang diterima. Simpan pembayaran dan kembalian.
-6. Ubah status tiket dan waktu keluar dalam transaksi yang sama, lalu commit.
+6. Ubah status tiket dan waktu keluar. Selesaikan permintaan pengguna terkait
+   dalam transaksi yang sama, lalu commit.
 
 Indeks unik `pembayaran.tiket_id` mencegah pembayaran kedua. Generated column
 menjadi NULL saat tiket selesai sehingga slot dan plat dapat dipakai lagi.
@@ -101,6 +102,42 @@ Durasi dihitung dari detik, dibulatkan menjadi menit, lalu jam. Contoh 60 menit
 ditambah 1 detik menghasilkan dua jam tagihan. Durasi nol tetap satu jam.
 Motor memakai tarif yang sama tiap jam. Mobil memakai tarif pertama dan lanjutan.
 
+## Alur akun pengguna
+
+`PenggunaParkirService` mengelola kendaraan tersimpan dan permintaan. Penerbitan
+tiket serta pembayaran tetap memakai `ParkirService`, sehingga alokasi slot,
+snapshot tarif, dan laporan hanya memiliki satu jalur pencatatan.
+
+| Status permintaan | Pemicu dan hasil |
+| --- | --- |
+| `menunggu` | Pengguna mengajukan kendaraan sendiri saat tiba. Belum ada tiket, slot, atau biaya. |
+| `aktif` | Petugas memverifikasi kode/plat. Tiket dan slot dialokasikan dalam satu transaksi. |
+| `minta_keluar` | Pengguna meminta keluar. Tiket tetap aktif dan biaya terus berjalan. |
+| `selesai` | Petugas menerima tunai. Pembayaran, tiket selesai, pelepasan slot, dan status permintaan disimpan atomik. |
+| `dibatalkan` | Pengguna membatalkan permintaan yang masih menunggu. Tidak ada tiket/biaya. |
+| `ditolak` | Petugas menolak permintaan menunggu dengan alasan. Tidak ada tiket/biaya. |
+
+`kendaraan_pengguna` menghubungkan akun dan master kendaraan. Indeks unik
+`kendaraan_id` membatasi satu akun per kendaraan. Melepas kendaraan hanya
+menghapus hubungan ini. `permintaan_parkir.pengguna_id` menyimpan pemilik riwayat
+secara tetap, sehingga pemilik akun berikutnya tidak mewarisi kunjungan sebelumnya.
+Tiket walk-in tidak diklaim otomatis berdasarkan kesamaan plat.
+
+Indeks unik generated column `kendaraan_terbuka_id` mencegah dua permintaan
+terbuka untuk satu kendaraan. `tiket_id` unik mengaitkan satu permintaan ke satu
+tiket. Pengajuan dan verifikasi berulang mengembalikan ID yang sama. Lock kendaraan
+dan permintaan menjaga pembatalan bersamaan dengan verifikasi. Permintaan keluar
+dan pembayaran mengunci tiket lebih dahulu agar status tetap konsisten.
+
+Masuk manual untuk plat dengan permintaan menunggu diarahkan melalui antrean
+verifikasi, sehingga riwayat tidak ditautkan tanpa pemeriksaan petugas. Slot
+diperiksa saat pengajuan dan diperiksa ulang saat verifikasi. Antrean belum
+merupakan reservasi kapasitas.
+
+SQL pembaruan `fitur_pengguna_parkir.sql` dan migration ketiga memakai skema yang
+sama. Import dapat diulang tanpa menghapus transaksi. Rollback migration ditolak
+bila tabel pengguna masih berisi data.
+
 ## Hak akses dan keamanan
 
 - Auto-routing dimatikan. Semua mutation memakai POST dan CSRF berbasis session.
@@ -110,9 +147,13 @@ Motor memakai tarif yang sama tiap jam. Mobil memakai tarif pertama dan lanjutan
 - `AdminFilter` melindungi seluruh route `/admin`, termasuk CSV dan mutation.
 - Profil web (`/` dan `/profil`), login, serta pendaftaran tersedia bagi tamu.
   Pendaftaran selalu menyimpan peran `pengguna`, mengabaikan parameter peran dari
-  request. Sesudah login, pengguna menuju `/akun`; admin/petugas menuju dashboard.
-- `/akun` menampilkan identitas akun sendiri dan tarif terkini dari tabel `tarif`.
-  Route ini tidak menampilkan daftar kendaraan atau transaksi milik pengelola.
+  request. Sesudah login, pengguna menuju `/pengguna`; admin/petugas menuju dashboard.
+- `PenggunaFilter` membatasi seluruh `/pengguna/*` untuk peran pengguna. `/akun`
+  lama mengarahkan pengguna ke beranda baru. Profil dan tarif tersedia pada
+  `/pengguna/profil`. Jika SQL belum diimpor, area menampilkan HTTP 503 yang jelas.
+- Daftar, detail, pembatalan, dan permintaan keluar dibatasi `pengguna_id` akun
+  aktif. Akses detail/mutation permintaan akun lain mendapat 404. Pembayaran
+  tidak tersedia melalui route pengguna. Antrean `/permintaan` dilindungi StaffFilter.
 - Password memakai `password_hash` dan `password_verify`.
 - Login dibatasi per IP dan per username menggunakan throttler dan cache file CI4.
 - Pendaftaran dibatasi per IP, memakai CSRF, username unik, konfirmasi password,

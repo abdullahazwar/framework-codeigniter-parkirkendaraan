@@ -10,7 +10,7 @@ final class AuthController extends BaseController
     public function login()
     {
         if (session('user')) {
-            return redirect()->route(session('user.role') === 'pengguna' ? 'akun' : 'dashboard');
+            return redirect()->route(session('user.role') === 'pengguna' ? 'pengguna.beranda' : 'dashboard');
         }
 
         $this->response->setHeader('Cache-Control', 'no-store, private');
@@ -21,7 +21,7 @@ final class AuthController extends BaseController
     public function register()
     {
         if (session('user')) {
-            return redirect()->route(session('user.role') === 'pengguna' ? 'akun' : 'dashboard');
+            return redirect()->route(session('user.role') === 'pengguna' ? 'pengguna.beranda' : 'dashboard');
         }
 
         $this->response->setHeader('Cache-Control', 'no-store, private');
@@ -32,7 +32,7 @@ final class AuthController extends BaseController
     public function storeRegistration()
     {
         if (session('user')) {
-            return redirect()->route(session('user.role') === 'pengguna' ? 'akun' : 'dashboard');
+            return redirect()->route(session('user.role') === 'pengguna' ? 'pengguna.beranda' : 'dashboard');
         }
 
         $ipKey = hash('sha256', $this->request->getIPAddress());
@@ -178,7 +178,7 @@ final class AuthController extends BaseController
         session()->regenerate(true);
         session()->set('user', $user);
 
-        return redirect()->route($user['role'] === 'pengguna' ? 'akun' : 'dashboard');
+        return redirect()->route($user['role'] === 'pengguna' ? 'pengguna.beranda' : 'dashboard');
     }
 
     public function logout()

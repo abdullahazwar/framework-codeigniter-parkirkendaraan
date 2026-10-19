@@ -23,7 +23,12 @@ final class ParkirService
         $this->db = $db ?? Database::connect();
     }
 
-    public function kendaraanMasuk(string $plat, string $jenis, int $petugas): int
+    public function kendaraanMasuk(
+        string $plat,
+        string $jenis,
+        int $petugas,
+        ?int $permintaanId = null,
+    ): int
     {
         $plat = Kendaraan::normalisasiPlat($plat);
         if (!Kendaraan::platValid($plat) || !in_array($jenis, ['motor', 'mobil'], true)) {
@@ -32,7 +37,7 @@ final class ParkirService
             );
         }
 
-        return $this->atomik(function () use ($plat, $jenis, $petugas): int {
+        return $this->atomik(function () use ($plat, $jenis, $petugas, $permintaanId): int {
             // Upsert locks the unique plate, including simultaneous first visits.
             $this->db->query(
                 'INSERT INTO kendaraan (plat_nomor, jenis) VALUES (?, ?)
@@ -46,6 +51,33 @@ final class ParkirService
                 throw new AturanParkirException(
                     'Plat sudah terdaftar untuk jenis kendaraan berbeda.',
                 );
+            }
+            $permintaan = null;
+            if ($this->db->tableExists('permintaan_parkir')) {
+                if ($permintaanId !== null) {
+                    $permintaan = $this->db->query(
+                        'SELECT * FROM permintaan_parkir WHERE id = ? AND kendaraan_id = ? FOR UPDATE',
+                        [$permintaanId, $kendaraan['id']],
+                    )->getRowArray();
+                    if ($permintaan && $permintaan['tiket_id']
+                        && in_array($permintaan['status'], ['aktif', 'minta_keluar', 'selesai'], true)) {
+                        return (int) $permintaan['tiket_id'];
+                    }
+                } else {
+                    $permintaan = $this->db->query(
+                        "SELECT id FROM permintaan_parkir
+                         WHERE kendaraan_id = ? AND status = 'menunggu' FOR UPDATE",
+                        [$kendaraan['id']],
+                    )->getRowArray();
+                    if ($permintaan) {
+                        throw new AturanParkirException(
+                            'Plat memiliki permintaan pengguna. Verifikasi kode melalui menu Permintaan pengguna.',
+                        );
+                    }
+                }
+            }
+            if ($permintaanId !== null && (!$permintaan || $permintaan['status'] !== 'menunggu')) {
+                throw new AturanParkirException('Permintaan sudah dibatalkan, ditolak, atau tidak ditemukan.');
             }
             if (
                 $this->db
@@ -90,7 +122,16 @@ final class ParkirService
                 'tarif_lanjutan_snapshot' => $tarif['tarif_lanjutan'],
             ]);
 
-            return (int) $this->db->insertID();
+            $tiketId = (int) $this->db->insertID();
+            if ($permintaanId !== null) {
+                $this->db->table('permintaan_parkir')->where('id', $permintaanId)->update([
+                    'tiket_id' => $tiketId,
+                    'status' => 'aktif',
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ]);
+            }
+
+            return $tiketId;
         });
     }
 
@@ -168,6 +209,11 @@ final class ParkirService
                     'waktu_keluar' => $sekarang,
                     'status' => 'selesai',
                 ]);
+            if ($this->db->tableExists('permintaan_parkir')) {
+                $this->db->table('permintaan_parkir')->where('tiket_id', $id)
+                    ->whereIn('status', ['aktif', 'minta_keluar'])
+                    ->update(['status' => 'selesai', 'updated_at' => $sekarang]);
+            }
 
             return $tagihan + ['uang_diterima' => $uang, 'kembalian' => $uang - $tagihan['total']];
         });

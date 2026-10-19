@@ -18,7 +18,9 @@ dijalankan tanpa memasang atau menjalankan Composer.
 
 - Halaman profil publik dengan navigasi Tentang, Keunggulan, Alur parkir, dan FAQ.
 - Tombol Masuk serta Daftar di navigasi atas, termasuk tampilan HP.
-- Pendaftaran pengguna, profil akun, dan informasi tarif langsung dari database.
+- Pendaftaran dan area pengguna terpisah dengan kendaraan, tiket, tagihan, riwayat, dan profil.
+- Pengajuan masuk oleh pengguna, antrean verifikasi petugas, serta permintaan keluar.
+- Riwayat dan bukti bayar pribadi, terhubung ke akun pengaju.
 - Login pengguna, admin, dan petugas dengan pembatasan akses sesuai peran.
 - Kendaraan masuk, alokasi slot otomatis, dan tiket yang dapat dicetak.
 - Cari tiket aktif melalui kode atau plat, dilengkapi filter dan pagination.
@@ -107,22 +109,45 @@ PHPUnit. Pengguna XAMPP dapat langsung memakai hasil clone atau Download ZIP.
 ## Cara menggunakan
 
 Halaman awal menampilkan profil web. Pengunjung dapat membaca informasi tanpa
-login, membuka **Daftar**, lalu masuk untuk melihat **Akun saya** dan tarif saat ini.
-Akun hasil pendaftaran selalu berperan `pengguna`. Panel operasional tetap hanya
-untuk admin dan petugas. Akun pengguna tidak menyediakan reservasi slot.
+login, membuka **Daftar**, lalu masuk ke **Area pengguna** pada `/pengguna`.
+Akun hasil pendaftaran selalu berperan `pengguna`. Panel operasional tersedia
+untuk admin dan petugas pada `/dashboard`.
+
+### Alur pengguna parkir
+
+1. Buka **Kendaraan**, simpan plat nomor dan jenis kendaraan.
+2. Saat sudah tiba di pintu masuk, buka **Parkir saya**, pilih kendaraan,
+   centang konfirmasi kedatangan, dan ajukan masuk.
+3. Tunjukkan kode permintaan kepada petugas. Petugas mencocokkan kendaraan lalu
+   mengonfirmasi masuk melalui **Permintaan pengguna**.
+4. Buka detail parkir untuk melihat tiket, area/slot, waktu masuk, dan estimasi tagihan.
+5. Saat akan keluar, pilih **Minta keluar & bayar tunai**, lalu bayar kepada petugas.
+6. Setelah petugas mengonfirmasi pembayaran, tiket selesai dan bukti bayar dapat
+   dibuka atau dicetak melalui **Riwayat**.
+
+Pengajuan belum memesan slot atau memulai biaya. Slot dan tarif ditetapkan saat
+petugas mengonfirmasi masuk. Permintaan yang belum diterima dapat dibatalkan;
+penolakan petugas menampilkan alasannya. Estimasi biaya tetap berjalan sampai
+pembayaran diselesaikan petugas.
+
+Satu kendaraan hanya dapat disimpan oleh satu akun. Melepas kendaraan tidak
+menghapus riwayat akun lama. Tiket manual yang pernah memakai plat sama tidak
+otomatis menjadi riwayat akun baru.
 
 ### Pembaruan instalasi yang sudah berjalan
 
 Setelah mengambil source terbaru, pilih database aplikasi di phpMyAdmin,
 kemudian buka **Import** dan pilih
-[`app/Database/perbaikan_daftar_user.sql`](app/Database/perbaikan_daftar_user.sql).
-SQL ini menambah pilihan peran `pengguna` pada kolom `users.role` tanpa menghapus
-akun, kendaraan, tiket, atau pembayaran. SQL boleh diimpor ulang.
+[`app/Database/fitur_pengguna_parkir.sql`](app/Database/fitur_pengguna_parkir.sql).
+SQL ini menambah peran `pengguna` dan tabel `kendaraan_pengguna` serta
+`permintaan_parkir`. Akun, kendaraan, tiket, dan pembayaran lama tetap tersimpan.
+SQL boleh diimpor ulang.
 
 Mengambil source terbaru tidak otomatis mengubah tabel database lokal. Jika kolom
 `role` masih hanya menerima `admin` dan `petugas`, pendaftaran pengguna akan gagal
 meskipun data formulir sudah valid. File `parkir.sql` untuk instalasi baru sudah
-memuat peran pengguna. Database yang sudah terisi cukup memakai file perbaikan.
+memuat peran dan tabel pengguna. Database yang sudah terisi cukup memakai SQL
+pembaruan di atas, termasuk jika sebelumnya sudah mengimpor `perbaikan_daftar_user.sql`.
 
 Alternatif melalui terminal dari folder proyek:
 
@@ -136,16 +161,19 @@ Pada XAMPP Windows jika PHP belum ada di PATH:
 C:\xampp\php\php.exe spark migrate
 ```
 
-Pilih salah satu cara: impor SQL perbaikan atau jalankan migration.
+Pilih salah satu cara: impor SQL pembaruan atau jalankan migration.
 Tidak perlu mengimpor ulang `parkir.sql`, menjalankan seed, atau memasang Composer.
 Pertahankan `.env` dan seluruh `.htaccess` yang sudah sesuai localhost.
 
 ### Operasional admin dan petugas
 
 1. Admin membuka Akun petugas untuk menambahkan akun operasional.
-2. Buka Kendaraan masuk, isi plat dan jenis, lalu simpan tiket.
+2. Untuk pengajuan dari akun pengguna, buka **Permintaan pengguna**, cocokkan
+   plat dan kode, lalu konfirmasi masuk. Permintaan yang tidak sesuai dapat ditolak
+   dengan alasan. Untuk kendaraan tanpa pengajuan, gunakan **Kendaraan masuk**.
 3. Cetak tiket melalui dialog browser atau catat kode tiketnya.
-4. Saat kendaraan keluar, buka Parkir aktif dan cari plat atau kode tiket.
+4. Saat kendaraan keluar, buka tab **Minta keluar** di Permintaan pengguna,
+   atau buka Parkir aktif dan cari plat/kode tiket.
 5. Pilih Proses keluar, periksa tagihan, lalu isi uang tunai diterima.
 6. Centang bahwa pembayaran sudah diterima, lalu konfirmasi.
 7. Cetak bukti dan periksa transaksi melalui Riwayat atau Laporan pendapatan.
@@ -174,10 +202,10 @@ app/
   Database/      Migration dan InitialSeeder
   Entities/      Kendaraan dan TiketParkir
   Exceptions/    Kesalahan aturan parkir
-  Filters/       Autentikasi dan akses admin
+  Filters/       Autentikasi dan akses admin, petugas, pengguna
   Helpers/       Format uang, waktu, dan navigasi
   Models/        Enam model tabel
-  Services/      ParkirService, LaporanService, class tarif PBO
+  Services/      ParkirService, PenggunaParkirService, LaporanService, tarif PBO
   Views/         HTML dan penyajian data
 public/assets/
   css/           Seluruh gaya aplikasi
@@ -225,8 +253,9 @@ composer audit
 ```
 
 Suite memakai MySQL/MariaDB sungguhan. Uji konkurensi menjalankan dua proses PHP
-dengan koneksi terpisah dan barrier, termasuk perebutan slot terakhir dan
-pembayaran tiket yang sama. CI GitHub mengonfigurasi matriks MySQL 8.0 dan MariaDB
+dengan koneksi terpisah dan barrier, termasuk perebutan slot terakhir,
+pembayaran tiket yang sama, pengajuan/verifikasi ganda, dan pembatalan bersamaan.
+CI GitHub mengonfigurasi matriks MySQL 8.0 dan MariaDB
 10.11 serta 10.4 dengan PHP 8.2. Bukti pengujian lokal dan cakupannya ada di
 [PENGUJIAN.md](docs/PENGUJIAN.md).
 

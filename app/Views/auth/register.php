@@ -7,11 +7,11 @@ $errors = session()->getFlashdata('errors') ?? [];
     <section class="auth-intro" aria-labelledby="register-intro-title">
         <p class="eyebrow">AKUN PENGGUNA</p>
         <h1 id="register-intro-title">Kenali layanan.<br>Mulai dari akun.</h1>
-        <p>Buat akun untuk melihat informasi akun dan tarif parkir motor serta mobil.</p>
+        <p>Buat akun untuk menyimpan kendaraan, mengajukan masuk, dan membuka tiket serta riwayat parkir.</p>
         <ul class="registration-points">
             <li>Cukup nama, username, dan password.</li>
-            <li>Tarif mengikuti pengaturan pengelola.</li>
-            <li>Pencatatan kendaraan tetap dilayani petugas di lokasi.</li>
+            <li>Tiket dan bukti bayar tersimpan pada akun sendiri.</li>
+            <li>Masuk dan pembayaran diverifikasi petugas di lokasi.</li>
         </ul>
         <a class="text-link" href="<?= url_to('beranda') ?>#alur">Pelajari alur parkir <span aria-hidden="true">↗</span></a>
     </section>

@@ -91,19 +91,23 @@ http://localhost/gittugas/parkir/framework-codeigniter-parkirkendaraan/public/
 
 7. Buka URL aplikasi di atas, lalu tekan Ctrl+F5 untuk memuat ulang aset.
 
-## Memperbaiki pendaftaran pada database lama
+## Mengaktifkan halaman pengguna pada database lama
 
 1. Ambil source terbaru dari branch `main`.
 2. Buka phpMyAdmin dan pilih database yang sedang dipakai aplikasi.
-3. Pilih **Import**, lalu impor `app/Database/perbaikan_daftar_user.sql`.
-4. Ulangi pendaftaran melalui halaman Daftar.
+3. Pilih **Import**, lalu impor `app/Database/fitur_pengguna_parkir.sql`.
+4. Muat ulang aplikasi. Login pengguna menuju `/pengguna`; login admin/petugas
+   menuju `/dashboard`.
 
 Skema lama hanya menerima peran `admin` dan `petugas`. Akun yang didaftarkan
 melalui web memakai peran `pengguna`, sehingga database lama menolak penyimpanan.
-SQL perbaikan memperbarui kolom peran tanpa menghapus data. SQL ini boleh diimpor
-ulang dan tidak membutuhkan Composer atau perintah terminal.
+SQL pembaruan memperbarui kolom peran dan menambah dua tabel untuk kendaraan
+tersimpan serta permintaan parkir. SQL ini boleh diimpor ulang dan tidak
+membutuhkan Composer atau perintah terminal. Jika sebelumnya sudah mengimpor
+`perbaikan_daftar_user.sql`, impor file fitur di atas juga untuk mengaktifkan
+halaman pengguna yang lengkap.
 
-Untuk database yang sudah berisi data, gunakan file perbaikan. `parkir.sql`
+Untuk database yang sudah berisi data, gunakan file pembaruan. `parkir.sql`
 merupakan SQL instalasi baru untuk database kosong. Pengaturan `.env` dan seluruh
 `.htaccess` tetap dipertahankan.
 
@@ -118,7 +122,8 @@ merupakan SQL instalasi baru untuk database kosong. Pengaturan `.env` dan seluru
 | Access denied | Sesuaikan username/password database di `.env` |
 | Unknown database | Buat database `parkir`, lalu jalankan migration |
 | Table users tidak ditemukan | Jalankan migration dan InitialSeeder |
-| Daftar gagal pada database lama | Impor `app/Database/perbaikan_daftar_user.sql` pada database aplikasi |
+| Daftar gagal pada database lama | Impor `app/Database/fitur_pengguna_parkir.sql` pada database aplikasi |
+| Area pengguna belum tersedia (503) | Impor `app/Database/fitur_pengguna_parkir.sql`, lalu muat ulang |
 | Halaman login tanpa desain | Cocokkan `app.baseURL` sampai `/public/`, termasuk port dan seluruh folder |
 | Link berpindah ke localhost:8080 | Ubah baseURL bawaan menjadi alamat Apache yang digunakan |
 | Route /login mendapat 404 | Aktifkan `mod_rewrite` dan izinkan `.htaccess` pada konfigurasi Apache |

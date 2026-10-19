@@ -8,6 +8,7 @@
     <link rel="icon" href="<?= base_url("assets/favicon.svg") ?>" type="image/svg+xml">
     <link rel="stylesheet" href="<?= base_url("assets/vendor/bootstrap/bootstrap.min.css") ?>">
     <link rel="stylesheet" href="<?= base_url("assets/css/style.css") ?>">
+    <?= $this->renderSection('styles') ?>
     <script src="<?= base_url("assets/vendor/bootstrap/bootstrap.bundle.min.js") ?>" defer></script>
     <script src="<?= base_url("assets/js/parkir.js") ?>" defer></script>
 </head>
@@ -38,6 +39,7 @@
                     ["dashboard", "dashboard", "Dashboard"],
                     ["parkir.masuk", "parkir/masuk", "Kendaraan masuk"],
                     ["parkir.aktif", "parkir/aktif", "Parkir aktif"],
+                    ["permintaan", "permintaan", "Permintaan pengguna"],
                     ["riwayat", "riwayat", "Riwayat parkir"],
                 ]
                 as [$route, $path, $label]

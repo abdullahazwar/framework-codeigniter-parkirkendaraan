@@ -1,8 +1,10 @@
 # Catatan desain
 
 Produk: profil web publik, akun pengguna, dan panel operasional parkir di satu lokasi.
-Tugas utama: mencatat kendaraan masuk, menemukan tiket aktif, menerima pembayaran.
-Target: HP untuk operasional dan desktop untuk pengelolaan serta laporan.
+Tugas pengguna: menyimpan kendaraan, mengajukan masuk, membuka tiket/tagihan,
+meminta keluar, dan membuka bukti bayar. Tugas petugas: memverifikasi kedatangan,
+menemukan tiket aktif, dan menerima pembayaran. Target: HP bagi pengguna dan
+operasional; desktop bagi pengelolaan serta laporan.
 
 Arah visual: panel operasional navy dengan penanda amber dan aksi utama biru.
 Sidebar menjaga akses fungsi tetap jelas. Formulir memprioritaskan plat dan jenis
@@ -13,6 +15,14 @@ kendaraan. Tabel dapat digulir tanpa membuat seluruh halaman melebar.
 - Gaya panel dan token bersama berada di `public/assets/css/style.css`.
 - Gaya halaman publik berada di `public/assets/css/public.css`, dibatasi oleh
   kelas `.public-page` agar tidak mengubah panel operasional.
+- Area pengguna memakai `layouts/pengguna.php` dan `pengguna.css`. Navigasi atas
+  berisi Beranda, Kendaraan, Parkir saya, Riwayat, dan Profil. Panel petugas
+  memakai sidebar tersendiri, dengan antrean masuk/keluar dalam `permintaan.css`.
+- Tiket pengguna menampilkan tahapan kunjungan, kode untuk petugas, slot, tarif
+  snapshot, estimasi biaya, dan tindakan sesuai status. Bukti bayar hanya tampil
+  setelah pembayaran petugas. CSS cetak hanya menyertakan isi tiket/bukti.
+- Slot kosong, hitungan ringkasan, tagihan, dan riwayat memakai database nyata.
+  Pengguna memperbarui halaman melalui tombol status; tidak ada angka simulasi.
 - Interaksi form, pembayaran, dan cetak berada di `public/assets/js/parkir.js`.
 - Navigasi publik berada di `public/assets/js/public.js`. Menu HP dapat ditutup
   dengan Escape, klik tautan, klik di luar header, atau perpindahan fokus.
@@ -32,6 +42,9 @@ fiktif untuk demonstrasi. Screenshot ini bukan data transaksi produksi.
 | --- | --- |
 | Profil web desktop | [profil-desktop.png](screenshots/profil-desktop.png) |
 | Pendaftaran di HP | [daftar-mobile.png](screenshots/daftar-mobile.png) |
+| Beranda pengguna | [pengguna-desktop.png](screenshots/pengguna-desktop.png) |
+| Tiket pengguna di HP | [pengguna-tiket-mobile.png](screenshots/pengguna-tiket-mobile.png) |
+| Bukti bayar pengguna | [pengguna-bukti-bayar.png](screenshots/pengguna-bukti-bayar.png) |
 | Dashboard desktop | [dashboard-desktop.png](screenshots/dashboard-desktop.png) |
 | Kendaraan masuk di HP | [masuk-mobile.png](screenshots/masuk-mobile.png) |
 | Tiket masuk | [tiket-masuk.png](screenshots/tiket-masuk.png) |
