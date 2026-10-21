@@ -3,7 +3,8 @@
 Aplikasi parkir motor dan mobil berbasis CodeIgniter 4, PHP, MySQL/MariaDB,
 dan Bootstrap 5. Dibangun dari rancangan
 [ALUR_SISTEM_PARKIR_PBO_CI4.md](docs/ALUR_SISTEM_PARKIR_PBO_CI4.md).
-- jangan lupa untuk configurasi di .env nya sama seperti di .htacces pada base url. salin di .env.example ke -> .env
+
+- jangan lupa untuk buat file .env lalu salin di .env.xampp.example ke -> .env pada file yang baru di buat
 
 Untuk XAMPP Windows dan gejala **Index of /...**, ikuti
 [panduan XAMPP](docs/XAMPP.md). Aplikasi berada di `public/index.php`.
@@ -194,9 +195,9 @@ diproses dua kali.
 ## Tarif contoh
 
 | Kendaraan | Jam pertama | Jam berikutnya | Contoh 2 jam 15 menit |
-| --- | ---: | ---: | ---: |
-| Motor | Rp3.000 | Rp3.000 | Rp9.000 |
-| Mobil | Rp5.000 | Rp3.000 | Rp11.000 |
+| --------- | ----------: | -------------: | --------------------: |
+| Motor     |     Rp3.000 |        Rp3.000 |               Rp9.000 |
+| Mobil     |     Rp5.000 |        Rp3.000 |              Rp11.000 |
 
 Seluruh nominal memakai integer rupiah. Semua waktu memakai Asia/Jakarta.
 Plat dinormalisasi menjadi huruf kapital tanpa spasi. Format MVP mendukung plat
